@@ -13,4 +13,12 @@ nonisolated enum LibraryNavigation: Sendable {
         if !trimmed.isEmpty { return .clearSearch }
         return .none
     }
+
+    static func firstMatch(_ items: [LibraryItem], query: String) -> LibraryItem? {
+        LibraryItem.filtered(items, query: query).first
+    }
+
+    static func canFocusSearch(pathCount: Int) -> Bool {
+        pathCount == 0
+    }
 }

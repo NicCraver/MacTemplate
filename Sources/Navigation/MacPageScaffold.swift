@@ -4,7 +4,6 @@ import SwiftUI
 struct MacPageScaffold<Trailing: View, Content: View>: View {
     let title: String
     var subtitle: String? = nil
-    var onBack: (() -> Void)? = nil
     var contentMaxWidth: CGFloat = 720
     var scrolls: Bool = true
     @ViewBuilder var trailing: () -> Trailing
@@ -13,7 +12,6 @@ struct MacPageScaffold<Trailing: View, Content: View>: View {
     init(
         title: String,
         subtitle: String? = nil,
-        onBack: (() -> Void)? = nil,
         contentMaxWidth: CGFloat = 720,
         scrolls: Bool = true,
         @ViewBuilder trailing: @escaping () -> Trailing,
@@ -21,7 +19,6 @@ struct MacPageScaffold<Trailing: View, Content: View>: View {
     ) {
         self.title = title
         self.subtitle = subtitle
-        self.onBack = onBack
         self.contentMaxWidth = contentMaxWidth
         self.scrolls = scrolls
         self.trailing = trailing
@@ -54,23 +51,11 @@ struct MacPageScaffold<Trailing: View, Content: View>: View {
     }
 
     private var chrome: some View {
-        HStack(alignment: .top, spacing: 10) {
-            if let onBack {
-                Button(action: onBack) {
-                    PikaIcon(PikaIcon.Name.arrowLeft, size: 16, color: .cc.mutedForeground)
-                        .frame(width: 28, height: 28)
-                        .contentShape(Rectangle())
-                }
-                .buttonStyle(.plain)
-                .help("返回")
-                .accessibilityLabel("返回")
-            }
-            PageHeader(title: title, subtitle: subtitle, trailing: trailing)
-        }
-        .padding(.horizontal, MacChrome.pageInset)
-        .padding(.top, MacChrome.pageInset)
-        .padding(.bottom, MacChrome.pageInset)
-        .geometryGroup()
+        PageHeader(title: title, subtitle: subtitle, trailing: trailing)
+            .padding(.horizontal, MacChrome.pageInset)
+            .padding(.top, MacChrome.pageInset)
+            .padding(.bottom, MacChrome.pageInset)
+            .geometryGroup()
     }
 }
 
@@ -78,7 +63,6 @@ extension MacPageScaffold where Trailing == EmptyView {
     init(
         title: String,
         subtitle: String? = nil,
-        onBack: (() -> Void)? = nil,
         contentMaxWidth: CGFloat = 720,
         scrolls: Bool = true,
         @ViewBuilder content: @escaping () -> Content
@@ -86,7 +70,6 @@ extension MacPageScaffold where Trailing == EmptyView {
         self.init(
             title: title,
             subtitle: subtitle,
-            onBack: onBack,
             contentMaxWidth: contentMaxWidth,
             scrolls: scrolls,
             trailing: { EmptyView() },

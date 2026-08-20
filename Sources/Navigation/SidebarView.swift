@@ -2,10 +2,12 @@ import ChunUI
 import SwiftUI
 
 struct SidebarView: View {
-    @Binding var section: AppSection
+    @Environment(AppSession.self) private var session
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Namespace private var selectionNamespace
     @State private var hovered: AppSection?
+
+    private var section: AppSection { session.section }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 2) {
@@ -42,7 +44,7 @@ struct SidebarView: View {
         let selected = section == item
         let color: Color = selected ? .cc.foreground : .cc.mutedForeground
         return Button {
-            section = item
+            session.go(to: item)
         } label: {
             Label {
                 Text(item.title)

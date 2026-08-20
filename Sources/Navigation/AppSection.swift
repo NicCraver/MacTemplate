@@ -5,11 +5,12 @@ import SwiftUI
 enum AppSection: String, CaseIterable, Identifiable, Hashable {
     case overview
     case library
+    case components
     case settings
 
     var id: String { rawValue }
 
-    static let primary: [AppSection] = [.overview, .library]
+    static let primary: [AppSection] = [.overview, .library, .components]
 
     static var menuOrder: [AppSection] { primary + [.settings] }
 
@@ -17,6 +18,7 @@ enum AppSection: String, CaseIterable, Identifiable, Hashable {
         switch self {
         case .overview: return "概览"
         case .library: return "资料库"
+        case .components: return "基础组件"
         case .settings: return "设置"
         }
     }
@@ -25,6 +27,7 @@ enum AppSection: String, CaseIterable, Identifiable, Hashable {
         switch self {
         case .overview: return AppIconName.overview
         case .library: return AppIconName.library
+        case .components: return AppIconName.components
         case .settings: return AppIconName.settings
         }
     }
@@ -47,6 +50,8 @@ enum AppSection: String, CaseIterable, Identifiable, Hashable {
             OverviewPage()
         case .library:
             LibraryPage()
+        case .components:
+            ComponentsPage()
         case .settings:
             SettingsRootView()
         }

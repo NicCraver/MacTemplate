@@ -8,9 +8,6 @@ final class AppSession {
 
     var section: AppSection = .overview
     var navigationEpoch: Int = 0
-    var settingsTab: SettingsTab {
-        didSet { defaults.set(settingsTab.rawValue, forKey: PreferenceKey.settingsTab) }
-    }
 
     /// 存 SwiftUI 原样的列可见性。两列布局里 NavigationSplitView 写回的是
     /// `.doubleColumn`，若中间经 Bool 转一手会被还原成 `.all` 再推回去，
@@ -36,8 +33,6 @@ final class AppSession {
         } else {
             self.showStatusBar = defaults.bool(forKey: PreferenceKey.showStatusBar)
         }
-        let tabRaw = defaults.string(forKey: PreferenceKey.settingsTab) ?? ""
-        self.settingsTab = SettingsTab(rawValue: tabRaw) ?? .general
     }
 
     func go(to section: AppSection) {

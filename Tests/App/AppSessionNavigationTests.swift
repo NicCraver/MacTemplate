@@ -24,16 +24,10 @@ struct AppSessionNavigationTests {
     }
 
     @Test
-    func settingsTabPersists() {
+    func doesNotPersistASettingsTab() {
         let defaults = makeSuite("MacTemplate.AppSession.settingsTab")
-        let session = AppSession(defaults: defaults)
-        #expect(session.settingsTab == .general)
-
-        session.settingsTab = .appearance
-        #expect(defaults.string(forKey: PreferenceKey.settingsTab) == "appearance")
-
-        let restored = AppSession(defaults: defaults)
-        #expect(restored.settingsTab == .appearance)
+        _ = AppSession(defaults: defaults)
+        #expect(defaults.object(forKey: "macTemplate.settingsTab") == nil)
 
         defaults.removePersistentDomain(forName: "MacTemplate.AppSession.settingsTab")
     }

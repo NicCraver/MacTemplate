@@ -19,6 +19,7 @@ struct SettingsGroupCard<Content: View>: View {
             }
             CCAppleCard(radius: 16) {
                 content()
+                    .frame(maxWidth: .infinity, alignment: .leading)
             }
         }
     }

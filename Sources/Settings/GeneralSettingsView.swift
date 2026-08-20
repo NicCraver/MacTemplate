@@ -7,19 +7,22 @@ struct GeneralSettingsView: View {
     var body: some View {
         @Bindable var session = session
         SettingsGroupCard("菜单栏") {
-            Toggle(isOn: $session.showStatusBar) {
+            HStack(alignment: .center, spacing: 16) {
                 VStack(alignment: .leading, spacing: 4) {
                     Text("在菜单栏显示图标")
                         .ccText(font: .cc.base, color: .cc.foreground)
-                    Text("关闭后仍可从侧栏底部或程序坞打开本页。")
+                    Text("关闭后仍可从侧栏打开设置。")
                         .ccText(font: .cc.sm, color: .cc.mutedForeground)
                         .fixedSize(horizontal: false, vertical: true)
                 }
+                Spacer(minLength: 12)
+                Toggle("在菜单栏显示图标", isOn: $session.showStatusBar)
+                    .toggleStyle(.switch)
+                    .labelsHidden()
+                    .tint(Color.cc.primary)
+                    .accessibilityIdentifier("settings.statusBar")
             }
-            .toggleStyle(.switch)
-            .tint(Color.cc.primary)
             .padding(16)
-            .accessibilityIdentifier("settings.statusBar")
         }
     }
 }

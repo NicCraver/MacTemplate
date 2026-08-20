@@ -23,7 +23,7 @@ final class LaunchUITests: XCTestCase {
         let groupTitle = app.staticTexts["菜单栏"]
         XCTAssertTrue(
             statusBarTitle.waitForExistence(timeout: 8) || groupTitle.waitForExistence(timeout: 4),
-            "⌘, should open general settings"
+            "⌘, should open settings"
         )
     }
 }

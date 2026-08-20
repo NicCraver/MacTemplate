@@ -8,7 +8,7 @@ struct RootSplitView: View {
     var body: some View {
         @Bindable var session = session
         NavigationSplitView(columnVisibility: $session.sidebarVisibility) {
-            SidebarView(section: $session.section)
+            SidebarView()
                 .navigationSplitViewColumnWidth(
                     min: 180,
                     ideal: MacChrome.sidebarWidth,
