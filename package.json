@@ -1,0 +1,12 @@
+{
+  "name": "mac-template",
+  "private": true,
+  "description": "macOS SwiftUI app template",
+  "scripts": {
+    "start": "./Scripts/start.sh",
+    "generate": "xcodegen generate",
+    "test": "./Scripts/test.sh",
+    "test:ui": "./Scripts/test.sh --ui",
+    "xcode": "./Scripts/xcode.sh"
+  }
+}

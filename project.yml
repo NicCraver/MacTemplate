@@ -1,0 +1,80 @@
+name: MacTemplate
+options:
+  bundleIdPrefix: com.chunui
+  createIntermediateGroups: true
+  deploymentTarget:
+    macOS: "15.0"
+packages:
+  ChunUI:
+    path: ../ChunUI
+settings:
+  base:
+    SWIFT_VERSION: "6.0"
+    SWIFT_DEFAULT_ACTOR_ISOLATION: MainActor
+    SWIFT_APPROACHABLE_CONCURRENCY: YES
+    MACOSX_DEPLOYMENT_TARGET: "15.0"
+    CODE_SIGN_STYLE: Manual
+    CODE_SIGN_IDENTITY: "-"
+    DEVELOPMENT_TEAM: ""
+schemes:
+  MacTemplate:
+    build:
+      targets:
+        MacTemplate: all
+    test:
+      targets:
+        - MacTemplateTests
+        - MacTemplateUITests
+targets:
+  MacTemplate:
+    type: application
+    platform: macOS
+    sources:
+      - path: Sources
+      - path: Resources/Assets.xcassets
+    dependencies:
+      - package: ChunUI
+        product: ChunUI
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        PRODUCT_BUNDLE_IDENTIFIER: com.chunui.mac-template
+        PRODUCT_NAME: MacTemplate
+        INFOPLIST_KEY_CFBundleDisplayName: MacTemplate
+        INFOPLIST_KEY_LSApplicationCategoryType: public.app-category.developer-tools
+        INFOPLIST_KEY_NSHumanReadableCopyright: Copyright © MacTemplate
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        MARKETING_VERSION: 1.0.0
+        CURRENT_PROJECT_VERSION: 1
+        COMBINE_HIDPI_IMAGES: YES
+      configs:
+        Debug:
+          ENABLE_TESTABILITY: YES
+        Release:
+          ENABLE_TESTABILITY: NO
+  MacTemplateTests:
+    type: bundle.unit-test
+    platform: macOS
+    sources:
+      - path: Tests
+    dependencies:
+      - target: MacTemplate
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        PRODUCT_BUNDLE_IDENTIFIER: com.chunui.mac-template.tests
+        TEST_HOST: "$(BUILT_PRODUCTS_DIR)/MacTemplate.app/Contents/MacOS/MacTemplate"
+        BUNDLE_LOADER: "$(TEST_HOST)"
+  MacTemplateUITests:
+    type: bundle.ui-testing
+    platform: macOS
+    sources:
+      - path: UITests
+    dependencies:
+      - target: MacTemplate
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        PRODUCT_BUNDLE_IDENTIFIER: com.chunui.mac-template.uitests
+        TEST_TARGET_NAME: MacTemplate
+        SWIFT_DEFAULT_ACTOR_ISOLATION: nonisolated

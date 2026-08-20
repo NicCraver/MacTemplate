@@ -1,0 +1,25 @@
+name: test
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  unit:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: MacTemplate
+      - uses: actions/checkout@v4
+        with:
+          repository: liseami/ChunUI
+          path: ChunUI
+      - name: Install xcodegen
+        run: brew install xcodegen
+      - name: Unit tests
+        working-directory: MacTemplate
+        run: ./Scripts/test.sh
+      - name: UI tests
+        working-directory: MacTemplate
+        run: ./Scripts/test.sh --ui

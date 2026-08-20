@@ -1,0 +1,873 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0EEC2EB9450B11DA1C334297 /* AppCommands.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D3773CD168CF6CCF9330265 /* AppCommands.swift */; };
+		11CE38E4CFFCD40C5EF51D22 /* SidebarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06549F28241628E8040E80A6 /* SidebarView.swift */; };
+		1B06DEF43BBC3936970FCCE5 /* LibraryNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1302988387F6871EDA33A2B /* LibraryNavigation.swift */; };
+		208FEFCDC3591D9E51884512 /* MacTemplateApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD1765166E9A446E91B33AC5 /* MacTemplateApp.swift */; };
+		20A5EA5F29AB1F309132B156 /* AppSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E87FE32699EC9F229114469 /* AppSection.swift */; };
+		2901137D35DFB4BAF87AD822 /* WindowChrome.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7101E3BE3373AF54D0F8E760 /* WindowChrome.swift */; };
+		306FD2A2DE15874AAC5BA959 /* AppSectionRegistrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B50905D96BEA6182C3CB8914 /* AppSectionRegistrationTests.swift */; };
+		32AFD5DFF50302E2C5395383 /* AppInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA9EB2AE644F0E360CA82410 /* AppInfo.swift */; };
+		332AC5DF0E03D5E9C3221B24 /* AboutSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51B3C9AFF1B70BC7A497DCF4 /* AboutSettingsView.swift */; };
+		341EA3CBCFBC6070153F4301 /* BrandPaletteApplying.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7EC9E1B5A9267D3FCD56A38 /* BrandPaletteApplying.swift */; };
+		361AF722A86F05FBA5B83E8C /* SettingsTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 506FADD24478416C01B0F4DC /* SettingsTab.swift */; };
+		3AD05F8AEBEE32B5B02CE00A /* RecordingBrandPaletteApplier.swift in Sources */ = {isa = PBXBuildFile; fileRef = E70E9CF89505B2515C50DEE7 /* RecordingBrandPaletteApplier.swift */; };
+		408F8FB983662733E4D6F681 /* ChunUI in Frameworks */ = {isa = PBXBuildFile; productRef = 410396EF07DA6E1044C333B4 /* ChunUI */; };
+		48268461A6EFF6A281333E26 /* LibraryItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89E018F370D580A10E4C4B44 /* LibraryItem.swift */; };
+		4E49DEE55B6E91FBB28CC74E /* AppThemeRevisionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7833F5E34741C818A9EF29E /* AppThemeRevisionTests.swift */; };
+		519D5E31E69701DEDB0C95B4 /* AppearanceModeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20C622074DD55827BECD5563 /* AppearanceModeTests.swift */; };
+		546ABFC0226B088D810A273E /* LibraryPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9159627804D6B9A16D67D814 /* LibraryPage.swift */; };
+		5602B884C466E0B80E11512A /* SettingsGroupCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68A7068B789A2B9144488B70 /* SettingsGroupCard.swift */; };
+		6156BA981F47D0D00A5BFB0C /* AppThemeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E7A7D5A99FBECCBBC79709D /* AppThemeTests.swift */; };
+		6521108EF4DB52F6C034F2D8 /* GeneralSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A331DDBB29EA085052791556 /* GeneralSettingsView.swift */; };
+		6A24CBC4C89A1D94D39AA7CA /* LibraryNavigationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6AA887C29F582D23B42759E /* LibraryNavigationTests.swift */; };
+		73FB788D5A0D1A740ABE18F6 /* StatusBarMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE375BC0EDB9E551E6179880 /* StatusBarMenu.swift */; };
+		75CB83AB646AA4E597B0DC9A /* AppIconNameTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEE305033F4D4D7B51E8DCD7 /* AppIconNameTests.swift */; };
+		7DC8C8535C9B880B66436FFB /* AppSessionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A925B41BBA6F5F777CCD204C /* AppSessionTests.swift */; };
+		7E3B3C0A83A5C341A3629F91 /* BrandColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = D83A86C0FA7ECB4121F46DFA /* BrandColor.swift */; };
+		83661C7838A22BD1AB160D0D /* AppearanceSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C088B18366CDB53F1516154B /* AppearanceSettingsView.swift */; };
+		84C61318B58DACEF5681F465 /* SettingsTabPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5129D9EA81F60B7B2DAC98B /* SettingsTabPicker.swift */; };
+		855E728E9FAF2F69E43130E6 /* LibraryItemTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D29A1D84A0D8B200FA3846F /* LibraryItemTests.swift */; };
+		960BF26BEEA60531993FC5D1 /* AppearanceMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB8064B1829F5C1D6266671F /* AppearanceMode.swift */; };
+		9BE44F82C3667722F859F506 /* AppSessionNavigationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7886BF926D7B0325EA71D222 /* AppSessionNavigationTests.swift */; };
+		9C2038BCAB0408884410E9D5 /* AppSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA6871FE86E7FE520F5D07D0 /* AppSession.swift */; };
+		9C686C94AA81EE9C858F9143 /* AppInfoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7837657065453CAEB676ADF /* AppInfoTests.swift */; };
+		A0ADC032414C81AAB24B1045 /* PreferenceKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB9E1ED7070A84325EE8A373 /* PreferenceKey.swift */; };
+		A288A7B23658F7476D35A314 /* LibraryDetailPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 862FFBEBF699AFABE1F6832F /* LibraryDetailPage.swift */; };
+		A3391BD6337DE5E1A4CAEDDF /* AppIconName.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1478939F1958A23D4B8A1A88 /* AppIconName.swift */; };
+		B14EF3AEE16C2F65C8DE0A84 /* AppWindows.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F400883C0928F759558FABB /* AppWindows.swift */; };
+		B1B4FBE8A9CF5143AC45C2B1 /* OverviewPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71353A0B449B66791E473D61 /* OverviewPage.swift */; };
+		B28012D506F5140CC63A9D2C /* SettingsTabTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 956825F14C4F67E917D1E41B /* SettingsTabTests.swift */; };
+		B551E6B8F7ABA53D323C9A8E /* MacPageScaffold.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBFA8B15A294CB97A200B459 /* MacPageScaffold.swift */; };
+		C157E792A59B1A862FECB0C3 /* PageHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB740021A493B8AEC72F6F75 /* PageHeader.swift */; };
+		D01AACD5045097B59ABD78A7 /* BrandColorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B393AE6962697C0272A77298 /* BrandColorTests.swift */; };
+		DA8DADA952DEECB2C3526FA2 /* AppTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 468AC79D6A4FDAD6EB83CBFB /* AppTheme.swift */; };
+		E67EA9EB69D334E846883BB3 /* LaunchUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 544EFAD0AF449907C626D459 /* LaunchUITests.swift */; };
+		E8E20D23358E1F1232DE4177 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DFB6A2F76C929D54C382B6AD /* Assets.xcassets */; };
+		E9D9EE74089ECB3A12C52B1D /* RootSplitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62621F5DD6689B1ABA6AB875 /* RootSplitView.swift */; };
+		EB3C87CB60B64BD51AC07008 /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F75CEDA68CA2AA1825D9911 /* AboutView.swift */; };
+		F1DCA1C330651E39193AF44F /* SettingsRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59ED7CFC9BFEC155B24EA99D /* SettingsRootView.swift */; };
+		F4CCD7B7903E3B7907D6A869 /* AppWindowsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26DC4B35A74BD7E0F678F2D5 /* AppWindowsTests.swift */; };
+		F8D5DBA0D2FA01ECD679DA01 /* AboutIdentityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA2B19EEFEC26D4DA387BCE8 /* AboutIdentityView.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		D3894BF624C813A642B367EF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A1A9D697C8361415E193AFA2 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 706FD865476D5893E3EEB14F;
+			remoteInfo = MacTemplate;
+		};
+		F34FB6060D2DB09C90B686B1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A1A9D697C8361415E193AFA2 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 706FD865476D5893E3EEB14F;
+			remoteInfo = MacTemplate;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		06549F28241628E8040E80A6 /* SidebarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarView.swift; sourceTree = "<group>"; };
+		1478939F1958A23D4B8A1A88 /* AppIconName.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppIconName.swift; sourceTree = "<group>"; };
+		20C622074DD55827BECD5563 /* AppearanceModeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppearanceModeTests.swift; sourceTree = "<group>"; };
+		26DC4B35A74BD7E0F678F2D5 /* AppWindowsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppWindowsTests.swift; sourceTree = "<group>"; };
+		468AC79D6A4FDAD6EB83CBFB /* AppTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppTheme.swift; sourceTree = "<group>"; };
+		506FADD24478416C01B0F4DC /* SettingsTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTab.swift; sourceTree = "<group>"; };
+		51B3C9AFF1B70BC7A497DCF4 /* AboutSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutSettingsView.swift; sourceTree = "<group>"; };
+		544EFAD0AF449907C626D459 /* LaunchUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchUITests.swift; sourceTree = "<group>"; };
+		54CE399EB9837F959BC0F519 /* MacTemplateUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MacTemplateUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		59ED7CFC9BFEC155B24EA99D /* SettingsRootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsRootView.swift; sourceTree = "<group>"; };
+		5D3773CD168CF6CCF9330265 /* AppCommands.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCommands.swift; sourceTree = "<group>"; };
+		5E87FE32699EC9F229114469 /* AppSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSection.swift; sourceTree = "<group>"; };
+		62621F5DD6689B1ABA6AB875 /* RootSplitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootSplitView.swift; sourceTree = "<group>"; };
+		68A7068B789A2B9144488B70 /* SettingsGroupCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsGroupCard.swift; sourceTree = "<group>"; };
+		6E7A7D5A99FBECCBBC79709D /* AppThemeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppThemeTests.swift; sourceTree = "<group>"; };
+		6E87AD55391E6B9257785550 /* ChunUI */ = {isa = PBXFileReference; lastKnownFileType = folder; name = ChunUI; path = ../ChunUI; sourceTree = SOURCE_ROOT; };
+		7101E3BE3373AF54D0F8E760 /* WindowChrome.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowChrome.swift; sourceTree = "<group>"; };
+		71353A0B449B66791E473D61 /* OverviewPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverviewPage.swift; sourceTree = "<group>"; };
+		7886BF926D7B0325EA71D222 /* AppSessionNavigationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSessionNavigationTests.swift; sourceTree = "<group>"; };
+		7F75CEDA68CA2AA1825D9911 /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
+		862FFBEBF699AFABE1F6832F /* LibraryDetailPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryDetailPage.swift; sourceTree = "<group>"; };
+		89E018F370D580A10E4C4B44 /* LibraryItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryItem.swift; sourceTree = "<group>"; };
+		8D29A1D84A0D8B200FA3846F /* LibraryItemTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryItemTests.swift; sourceTree = "<group>"; };
+		8F400883C0928F759558FABB /* AppWindows.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppWindows.swift; sourceTree = "<group>"; };
+		9159627804D6B9A16D67D814 /* LibraryPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryPage.swift; sourceTree = "<group>"; };
+		92BD875DF5704CEFC4A106E6 /* MacTemplateTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MacTemplateTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		956825F14C4F67E917D1E41B /* SettingsTabTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTabTests.swift; sourceTree = "<group>"; };
+		99116E79F93428E2D8F24732 /* MacTemplate.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MacTemplate.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A331DDBB29EA085052791556 /* GeneralSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralSettingsView.swift; sourceTree = "<group>"; };
+		A6AA887C29F582D23B42759E /* LibraryNavigationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryNavigationTests.swift; sourceTree = "<group>"; };
+		A925B41BBA6F5F777CCD204C /* AppSessionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSessionTests.swift; sourceTree = "<group>"; };
+		AE375BC0EDB9E551E6179880 /* StatusBarMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusBarMenu.swift; sourceTree = "<group>"; };
+		AEE305033F4D4D7B51E8DCD7 /* AppIconNameTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppIconNameTests.swift; sourceTree = "<group>"; };
+		B1302988387F6871EDA33A2B /* LibraryNavigation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryNavigation.swift; sourceTree = "<group>"; };
+		B393AE6962697C0272A77298 /* BrandColorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrandColorTests.swift; sourceTree = "<group>"; };
+		B50905D96BEA6182C3CB8914 /* AppSectionRegistrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSectionRegistrationTests.swift; sourceTree = "<group>"; };
+		BA9EB2AE644F0E360CA82410 /* AppInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppInfo.swift; sourceTree = "<group>"; };
+		C088B18366CDB53F1516154B /* AppearanceSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppearanceSettingsView.swift; sourceTree = "<group>"; };
+		C7833F5E34741C818A9EF29E /* AppThemeRevisionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppThemeRevisionTests.swift; sourceTree = "<group>"; };
+		D7EC9E1B5A9267D3FCD56A38 /* BrandPaletteApplying.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrandPaletteApplying.swift; sourceTree = "<group>"; };
+		D83A86C0FA7ECB4121F46DFA /* BrandColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrandColor.swift; sourceTree = "<group>"; };
+		DA6871FE86E7FE520F5D07D0 /* AppSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSession.swift; sourceTree = "<group>"; };
+		DB740021A493B8AEC72F6F75 /* PageHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageHeader.swift; sourceTree = "<group>"; };
+		DD1765166E9A446E91B33AC5 /* MacTemplateApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacTemplateApp.swift; sourceTree = "<group>"; };
+		DFB6A2F76C929D54C382B6AD /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		E5129D9EA81F60B7B2DAC98B /* SettingsTabPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTabPicker.swift; sourceTree = "<group>"; };
+		E70E9CF89505B2515C50DEE7 /* RecordingBrandPaletteApplier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingBrandPaletteApplier.swift; sourceTree = "<group>"; };
+		EA2B19EEFEC26D4DA387BCE8 /* AboutIdentityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutIdentityView.swift; sourceTree = "<group>"; };
+		EB8064B1829F5C1D6266671F /* AppearanceMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppearanceMode.swift; sourceTree = "<group>"; };
+		EB9E1ED7070A84325EE8A373 /* PreferenceKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferenceKey.swift; sourceTree = "<group>"; };
+		EBFA8B15A294CB97A200B459 /* MacPageScaffold.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacPageScaffold.swift; sourceTree = "<group>"; };
+		F7837657065453CAEB676ADF /* AppInfoTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppInfoTests.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		497475183659090A0EB14D27 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				408F8FB983662733E4D6F681 /* ChunUI in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		04830FACBCEBA1B2BC7B4E18 /* Library */ = {
+			isa = PBXGroup;
+			children = (
+				862FFBEBF699AFABE1F6832F /* LibraryDetailPage.swift */,
+				89E018F370D580A10E4C4B44 /* LibraryItem.swift */,
+				B1302988387F6871EDA33A2B /* LibraryNavigation.swift */,
+				9159627804D6B9A16D67D814 /* LibraryPage.swift */,
+			);
+			path = Library;
+			sourceTree = "<group>";
+		};
+		1040E292E2C11A8C6FC4CA6F /* Support */ = {
+			isa = PBXGroup;
+			children = (
+				E70E9CF89505B2515C50DEE7 /* RecordingBrandPaletteApplier.swift */,
+			);
+			path = Support;
+			sourceTree = "<group>";
+		};
+		18CAAB23319F9D00DFD08C70 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				5D3773CD168CF6CCF9330265 /* AppCommands.swift */,
+				BA9EB2AE644F0E360CA82410 /* AppInfo.swift */,
+				DA6871FE86E7FE520F5D07D0 /* AppSession.swift */,
+				8F400883C0928F759558FABB /* AppWindows.swift */,
+				DD1765166E9A446E91B33AC5 /* MacTemplateApp.swift */,
+				EB9E1ED7070A84325EE8A373 /* PreferenceKey.swift */,
+				AE375BC0EDB9E551E6179880 /* StatusBarMenu.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		282C4984570958E86A2EDCB2 /* Library */ = {
+			isa = PBXGroup;
+			children = (
+				8D29A1D84A0D8B200FA3846F /* LibraryItemTests.swift */,
+				A6AA887C29F582D23B42759E /* LibraryNavigationTests.swift */,
+			);
+			path = Library;
+			sourceTree = "<group>";
+		};
+		2A818A0A986492E956F69E09 = {
+			isa = PBXGroup;
+			children = (
+				C4BC078282F418E1FC39B989 /* Packages */,
+				9972CE39536588EA847153A5 /* Resources */,
+				90007B7FA5D986ECB3F42109 /* Sources */,
+				C2F777CF851B47732267DBB5 /* Tests */,
+				824ADC18385C5B80715E1B42 /* UITests */,
+				9623352242C014E0B982694A /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		467D6847EEC6677000C05D12 /* Windows */ = {
+			isa = PBXGroup;
+			children = (
+				EA2B19EEFEC26D4DA387BCE8 /* AboutIdentityView.swift */,
+				7F75CEDA68CA2AA1825D9911 /* AboutView.swift */,
+			);
+			path = Windows;
+			sourceTree = "<group>";
+		};
+		6B1E32CCB728A28F4F552A3B /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				956825F14C4F67E917D1E41B /* SettingsTabTests.swift */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
+		824ADC18385C5B80715E1B42 /* UITests */ = {
+			isa = PBXGroup;
+			children = (
+				544EFAD0AF449907C626D459 /* LaunchUITests.swift */,
+			);
+			path = UITests;
+			sourceTree = "<group>";
+		};
+		90007B7FA5D986ECB3F42109 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				18CAAB23319F9D00DFD08C70 /* App */,
+				D31DE5AC1DC3C5BFA1A163D7 /* Features */,
+				C1521E065C8433C18B02233A /* Navigation */,
+				CAEED8CAC7CCD4234D7CA38B /* Settings */,
+				BAAF8B5B328382196E03651A /* Theme */,
+				467D6847EEC6677000C05D12 /* Windows */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		9623352242C014E0B982694A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				99116E79F93428E2D8F24732 /* MacTemplate.app */,
+				92BD875DF5704CEFC4A106E6 /* MacTemplateTests.xctest */,
+				54CE399EB9837F959BC0F519 /* MacTemplateUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		9972CE39536588EA847153A5 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				DFB6A2F76C929D54C382B6AD /* Assets.xcassets */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		A95D026E9516CFC28FF341B2 /* Navigation */ = {
+			isa = PBXGroup;
+			children = (
+				B50905D96BEA6182C3CB8914 /* AppSectionRegistrationTests.swift */,
+			);
+			path = Navigation;
+			sourceTree = "<group>";
+		};
+		BAAF8B5B328382196E03651A /* Theme */ = {
+			isa = PBXGroup;
+			children = (
+				EB8064B1829F5C1D6266671F /* AppearanceMode.swift */,
+				1478939F1958A23D4B8A1A88 /* AppIconName.swift */,
+				468AC79D6A4FDAD6EB83CBFB /* AppTheme.swift */,
+				D83A86C0FA7ECB4121F46DFA /* BrandColor.swift */,
+				D7EC9E1B5A9267D3FCD56A38 /* BrandPaletteApplying.swift */,
+			);
+			path = Theme;
+			sourceTree = "<group>";
+		};
+		C1521E065C8433C18B02233A /* Navigation */ = {
+			isa = PBXGroup;
+			children = (
+				5E87FE32699EC9F229114469 /* AppSection.swift */,
+				EBFA8B15A294CB97A200B459 /* MacPageScaffold.swift */,
+				DB740021A493B8AEC72F6F75 /* PageHeader.swift */,
+				62621F5DD6689B1ABA6AB875 /* RootSplitView.swift */,
+				06549F28241628E8040E80A6 /* SidebarView.swift */,
+				7101E3BE3373AF54D0F8E760 /* WindowChrome.swift */,
+			);
+			path = Navigation;
+			sourceTree = "<group>";
+		};
+		C2F777CF851B47732267DBB5 /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				E26CD4D16F0729A5ABF39139 /* App */,
+				FD28440FB551914FC3B9A48F /* Features */,
+				A95D026E9516CFC28FF341B2 /* Navigation */,
+				6B1E32CCB728A28F4F552A3B /* Settings */,
+				1040E292E2C11A8C6FC4CA6F /* Support */,
+				FC45781D9EBCE517EA106322 /* Theme */,
+			);
+			path = Tests;
+			sourceTree = "<group>";
+		};
+		C4BC078282F418E1FC39B989 /* Packages */ = {
+			isa = PBXGroup;
+			children = (
+				6E87AD55391E6B9257785550 /* ChunUI */,
+			);
+			name = Packages;
+			sourceTree = "<group>";
+		};
+		CAEED8CAC7CCD4234D7CA38B /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				51B3C9AFF1B70BC7A497DCF4 /* AboutSettingsView.swift */,
+				C088B18366CDB53F1516154B /* AppearanceSettingsView.swift */,
+				A331DDBB29EA085052791556 /* GeneralSettingsView.swift */,
+				68A7068B789A2B9144488B70 /* SettingsGroupCard.swift */,
+				59ED7CFC9BFEC155B24EA99D /* SettingsRootView.swift */,
+				506FADD24478416C01B0F4DC /* SettingsTab.swift */,
+				E5129D9EA81F60B7B2DAC98B /* SettingsTabPicker.swift */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
+		D31DE5AC1DC3C5BFA1A163D7 /* Features */ = {
+			isa = PBXGroup;
+			children = (
+				04830FACBCEBA1B2BC7B4E18 /* Library */,
+				DF70BC74517A3E343FFF2D4F /* Overview */,
+			);
+			path = Features;
+			sourceTree = "<group>";
+		};
+		DF70BC74517A3E343FFF2D4F /* Overview */ = {
+			isa = PBXGroup;
+			children = (
+				71353A0B449B66791E473D61 /* OverviewPage.swift */,
+			);
+			path = Overview;
+			sourceTree = "<group>";
+		};
+		E26CD4D16F0729A5ABF39139 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				F7837657065453CAEB676ADF /* AppInfoTests.swift */,
+				7886BF926D7B0325EA71D222 /* AppSessionNavigationTests.swift */,
+				A925B41BBA6F5F777CCD204C /* AppSessionTests.swift */,
+				26DC4B35A74BD7E0F678F2D5 /* AppWindowsTests.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		FC45781D9EBCE517EA106322 /* Theme */ = {
+			isa = PBXGroup;
+			children = (
+				20C622074DD55827BECD5563 /* AppearanceModeTests.swift */,
+				AEE305033F4D4D7B51E8DCD7 /* AppIconNameTests.swift */,
+				C7833F5E34741C818A9EF29E /* AppThemeRevisionTests.swift */,
+				6E7A7D5A99FBECCBBC79709D /* AppThemeTests.swift */,
+				B393AE6962697C0272A77298 /* BrandColorTests.swift */,
+			);
+			path = Theme;
+			sourceTree = "<group>";
+		};
+		FD28440FB551914FC3B9A48F /* Features */ = {
+			isa = PBXGroup;
+			children = (
+				282C4984570958E86A2EDCB2 /* Library */,
+			);
+			path = Features;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		0DE9D42741EA6A6691605C5A /* MacTemplateUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 36C9EBACE3627F823687421F /* Build configuration list for PBXNativeTarget "MacTemplateUITests" */;
+			buildPhases = (
+				C55483A02375771159B00138 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				8F3E5A4E4179107BC1FD1A81 /* PBXTargetDependency */,
+			);
+			name = MacTemplateUITests;
+			packageProductDependencies = (
+			);
+			productName = MacTemplateUITests;
+			productReference = 54CE399EB9837F959BC0F519 /* MacTemplateUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+		706FD865476D5893E3EEB14F /* MacTemplate */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F98AA19E5C1FBF0D6A1B94CD /* Build configuration list for PBXNativeTarget "MacTemplate" */;
+			buildPhases = (
+				F33834D20021A319BE1BFEE3 /* Sources */,
+				7722146EE1A1A53C5307E168 /* Resources */,
+				497475183659090A0EB14D27 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = MacTemplate;
+			packageProductDependencies = (
+				410396EF07DA6E1044C333B4 /* ChunUI */,
+			);
+			productName = MacTemplate;
+			productReference = 99116E79F93428E2D8F24732 /* MacTemplate.app */;
+			productType = "com.apple.product-type.application";
+		};
+		B00A091B3A7E1D7A799D26E8 /* MacTemplateTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 88F813E44EAF8EF9A2EC7AD0 /* Build configuration list for PBXNativeTarget "MacTemplateTests" */;
+			buildPhases = (
+				51A75C91F33995F1CC6CA08B /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				0F9257535F47D453D5189D89 /* PBXTargetDependency */,
+			);
+			name = MacTemplateTests;
+			packageProductDependencies = (
+			);
+			productName = MacTemplateTests;
+			productReference = 92BD875DF5704CEFC4A106E6 /* MacTemplateTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		A1A9D697C8361415E193AFA2 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					0DE9D42741EA6A6691605C5A = {
+						DevelopmentTeam = "";
+						ProvisioningStyle = Manual;
+						TestTargetID = 706FD865476D5893E3EEB14F;
+					};
+					706FD865476D5893E3EEB14F = {
+						DevelopmentTeam = "";
+						ProvisioningStyle = Manual;
+					};
+					B00A091B3A7E1D7A799D26E8 = {
+						DevelopmentTeam = "";
+						ProvisioningStyle = Manual;
+					};
+				};
+			};
+			buildConfigurationList = BDF87B2F67CED53F5BAE68FA /* Build configuration list for PBXProject "MacTemplate" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 2A818A0A986492E956F69E09;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				892EA07414F569ECB279FE00 /* XCLocalSwiftPackageReference "../ChunUI" */,
+			);
+			preferredProjectObjectVersion = 77;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				706FD865476D5893E3EEB14F /* MacTemplate */,
+				B00A091B3A7E1D7A799D26E8 /* MacTemplateTests */,
+				0DE9D42741EA6A6691605C5A /* MacTemplateUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		7722146EE1A1A53C5307E168 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E8E20D23358E1F1232DE4177 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		51A75C91F33995F1CC6CA08B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				75CB83AB646AA4E597B0DC9A /* AppIconNameTests.swift in Sources */,
+				9C686C94AA81EE9C858F9143 /* AppInfoTests.swift in Sources */,
+				306FD2A2DE15874AAC5BA959 /* AppSectionRegistrationTests.swift in Sources */,
+				9BE44F82C3667722F859F506 /* AppSessionNavigationTests.swift in Sources */,
+				7DC8C8535C9B880B66436FFB /* AppSessionTests.swift in Sources */,
+				4E49DEE55B6E91FBB28CC74E /* AppThemeRevisionTests.swift in Sources */,
+				6156BA981F47D0D00A5BFB0C /* AppThemeTests.swift in Sources */,
+				F4CCD7B7903E3B7907D6A869 /* AppWindowsTests.swift in Sources */,
+				519D5E31E69701DEDB0C95B4 /* AppearanceModeTests.swift in Sources */,
+				D01AACD5045097B59ABD78A7 /* BrandColorTests.swift in Sources */,
+				855E728E9FAF2F69E43130E6 /* LibraryItemTests.swift in Sources */,
+				6A24CBC4C89A1D94D39AA7CA /* LibraryNavigationTests.swift in Sources */,
+				3AD05F8AEBEE32B5B02CE00A /* RecordingBrandPaletteApplier.swift in Sources */,
+				B28012D506F5140CC63A9D2C /* SettingsTabTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C55483A02375771159B00138 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E67EA9EB69D334E846883BB3 /* LaunchUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F33834D20021A319BE1BFEE3 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F8D5DBA0D2FA01ECD679DA01 /* AboutIdentityView.swift in Sources */,
+				332AC5DF0E03D5E9C3221B24 /* AboutSettingsView.swift in Sources */,
+				EB3C87CB60B64BD51AC07008 /* AboutView.swift in Sources */,
+				0EEC2EB9450B11DA1C334297 /* AppCommands.swift in Sources */,
+				A3391BD6337DE5E1A4CAEDDF /* AppIconName.swift in Sources */,
+				32AFD5DFF50302E2C5395383 /* AppInfo.swift in Sources */,
+				20A5EA5F29AB1F309132B156 /* AppSection.swift in Sources */,
+				9C2038BCAB0408884410E9D5 /* AppSession.swift in Sources */,
+				DA8DADA952DEECB2C3526FA2 /* AppTheme.swift in Sources */,
+				B14EF3AEE16C2F65C8DE0A84 /* AppWindows.swift in Sources */,
+				960BF26BEEA60531993FC5D1 /* AppearanceMode.swift in Sources */,
+				83661C7838A22BD1AB160D0D /* AppearanceSettingsView.swift in Sources */,
+				7E3B3C0A83A5C341A3629F91 /* BrandColor.swift in Sources */,
+				341EA3CBCFBC6070153F4301 /* BrandPaletteApplying.swift in Sources */,
+				6521108EF4DB52F6C034F2D8 /* GeneralSettingsView.swift in Sources */,
+				A288A7B23658F7476D35A314 /* LibraryDetailPage.swift in Sources */,
+				48268461A6EFF6A281333E26 /* LibraryItem.swift in Sources */,
+				1B06DEF43BBC3936970FCCE5 /* LibraryNavigation.swift in Sources */,
+				546ABFC0226B088D810A273E /* LibraryPage.swift in Sources */,
+				B551E6B8F7ABA53D323C9A8E /* MacPageScaffold.swift in Sources */,
+				208FEFCDC3591D9E51884512 /* MacTemplateApp.swift in Sources */,
+				B1B4FBE8A9CF5143AC45C2B1 /* OverviewPage.swift in Sources */,
+				C157E792A59B1A862FECB0C3 /* PageHeader.swift in Sources */,
+				A0ADC032414C81AAB24B1045 /* PreferenceKey.swift in Sources */,
+				E9D9EE74089ECB3A12C52B1D /* RootSplitView.swift in Sources */,
+				5602B884C466E0B80E11512A /* SettingsGroupCard.swift in Sources */,
+				F1DCA1C330651E39193AF44F /* SettingsRootView.swift in Sources */,
+				361AF722A86F05FBA5B83E8C /* SettingsTab.swift in Sources */,
+				84C61318B58DACEF5681F465 /* SettingsTabPicker.swift in Sources */,
+				11CE38E4CFFCD40C5EF51D22 /* SidebarView.swift in Sources */,
+				73FB788D5A0D1A740ABE18F6 /* StatusBarMenu.swift in Sources */,
+				2901137D35DFB4BAF87AD822 /* WindowChrome.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		0F9257535F47D453D5189D89 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 706FD865476D5893E3EEB14F /* MacTemplate */;
+			targetProxy = D3894BF624C813A642B367EF /* PBXContainerItemProxy */;
+		};
+		8F3E5A4E4179107BC1FD1A81 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 706FD865476D5893E3EEB14F /* MacTemplate */;
+			targetProxy = F34FB6060D2DB09C90B686B1 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		26C4D54EF148A798D858A06C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_TESTABILITY = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = MacTemplate;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © MacTemplate";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.chunui.mac-template";
+				PRODUCT_NAME = MacTemplate;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		639544597FEDA2A30076647F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Manual;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = "";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 6.0;
+			};
+			name = Release;
+		};
+		6D0EB469E71F412F0998AE93 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_TESTABILITY = NO;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = MacTemplate;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © MacTemplate";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.chunui.mac-template";
+				PRODUCT_NAME = MacTemplate;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		7365515A54775A55290F66B3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				COMBINE_HIDPI_IMAGES = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.chunui.mac-template.tests";
+				SDKROOT = macosx;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MacTemplate.app/Contents/MacOS/MacTemplate";
+			};
+			name = Debug;
+		};
+		9D1102F20844C2CE367E75B9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				COMBINE_HIDPI_IMAGES = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.chunui.mac-template.uitests";
+				SDKROOT = macosx;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = nonisolated;
+				TEST_TARGET_NAME = MacTemplate;
+			};
+			name = Release;
+		};
+		D47FDCA3E48B5ACCD055E673 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Manual;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+		E1B74C1D67126E4C3BEB533C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				COMBINE_HIDPI_IMAGES = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.chunui.mac-template.tests";
+				SDKROOT = macosx;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MacTemplate.app/Contents/MacOS/MacTemplate";
+			};
+			name = Release;
+		};
+		EB2F88318332F253240DF99E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				COMBINE_HIDPI_IMAGES = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.chunui.mac-template.uitests";
+				SDKROOT = macosx;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = nonisolated;
+				TEST_TARGET_NAME = MacTemplate;
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		36C9EBACE3627F823687421F /* Build configuration list for PBXNativeTarget "MacTemplateUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EB2F88318332F253240DF99E /* Debug */,
+				9D1102F20844C2CE367E75B9 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		88F813E44EAF8EF9A2EC7AD0 /* Build configuration list for PBXNativeTarget "MacTemplateTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7365515A54775A55290F66B3 /* Debug */,
+				E1B74C1D67126E4C3BEB533C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		BDF87B2F67CED53F5BAE68FA /* Build configuration list for PBXProject "MacTemplate" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D47FDCA3E48B5ACCD055E673 /* Debug */,
+				639544597FEDA2A30076647F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		F98AA19E5C1FBF0D6A1B94CD /* Build configuration list for PBXNativeTarget "MacTemplate" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				26C4D54EF148A798D858A06C /* Debug */,
+				6D0EB469E71F412F0998AE93 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		892EA07414F569ECB279FE00 /* XCLocalSwiftPackageReference "../ChunUI" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../ChunUI;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		410396EF07DA6E1044C333B4 /* ChunUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = ChunUI;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = A1A9D697C8361415E193AFA2 /* Project object */;
+}
