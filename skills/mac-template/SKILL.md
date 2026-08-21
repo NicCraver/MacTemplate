@@ -26,6 +26,7 @@ description: Native macOS SwiftUI app template rules — WindowGroup, Settings s
 - 不要加窗口底栏
 - 不要在 Mac 上用 UIKit `AppHelper` sheet 栈
 - 不要引入 SwiftData / 网络 / Sparkle，除非用户明确要求
+- 不要加 GitHub Actions 在 push/PR 上跑测试；推送前本地 `pnpm test`
 - 不要在业务页手写空态，用 `CCEmptyState`
 - 不要把侧栏选中图标设成 `primaryForeground`（那是铺在品牌色上的白字）
 

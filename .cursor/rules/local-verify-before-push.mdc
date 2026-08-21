@@ -1,0 +1,11 @@
+---
+description: 推送前本地跑测试，不要触发 GitHub Actions
+alwaysApply: true
+---
+
+# 推送前本地验证
+
+- 推远程之前先在本机跑 `pnpm test`。动过 UI 测试再跑 `pnpm run test:ui`。
+- 不要添加或恢复 `on: push` / `on: pull_request` 的 GitHub Actions。
+- 不要用远程 CI 当验证；本地没过就不要 push。
+- 若仓库里还留着 workflow，push 时在提交说明加 `[skip ci]`。

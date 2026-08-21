@@ -8,7 +8,7 @@ macOS 15 SwiftUI 日常开发骨架。设计系统源码在本仓库 `Packages/C
 pnpm run start
 ```
 
-会生成工程、编译并直接打开 App。打开 Xcode：`pnpm run xcode`。跑单元测试：`pnpm test`。跑 UI 测试：`pnpm run test:ui`。
+会生成工程、编译并直接打开 App。打开 Xcode：`pnpm run xcode`。跑单元测试：`pnpm test`。跑 UI 测试：`pnpm run test:ui`。推远程前在本机跑测试，仓库不跑 GitHub Actions。
 
 工程默认 ad-hoc 签名，方便本机直接跑。要分发时在 Signing 里换成你的 Team。
 
