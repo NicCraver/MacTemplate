@@ -94,7 +94,7 @@
 		62621F5DD6689B1ABA6AB875 /* RootSplitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootSplitView.swift; sourceTree = "<group>"; };
 		68A7068B789A2B9144488B70 /* SettingsGroupCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsGroupCard.swift; sourceTree = "<group>"; };
 		6E7A7D5A99FBECCBBC79709D /* AppThemeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppThemeTests.swift; sourceTree = "<group>"; };
-		6E87AD55391E6B9257785550 /* ChunUI */ = {isa = PBXFileReference; lastKnownFileType = folder; name = ChunUI; path = ../ChunUI; sourceTree = SOURCE_ROOT; };
+		6E87AD55391E6B9257785550 /* ChunUI */ = {isa = PBXFileReference; lastKnownFileType = folder; name = ChunUI; path = Packages/ChunUI; sourceTree = SOURCE_ROOT; };
 		7101E3BE3373AF54D0F8E760 /* WindowChrome.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowChrome.swift; sourceTree = "<group>"; };
 		71353A0B449B66791E473D61 /* OverviewPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverviewPage.swift; sourceTree = "<group>"; };
 		7886BF926D7B0325EA71D222 /* AppSessionNavigationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSessionNavigationTests.swift; sourceTree = "<group>"; };
@@ -317,7 +317,7 @@
 			children = (
 				6E87AD55391E6B9257785550 /* ChunUI */,
 			);
-			name = Packages;
+			path = Packages;
 			sourceTree = "<group>";
 		};
 		CAEED8CAC7CCD4234D7CA38B /* Settings */ = {
@@ -484,7 +484,7 @@
 			mainGroup = 2A818A0A986492E956F69E09;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				892EA07414F569ECB279FE00 /* XCLocalSwiftPackageReference "../ChunUI" */,
+				3A1D3276B3C25931EDBCCCEB /* XCLocalSwiftPackageReference "Packages/ChunUI" */,
 			);
 			preferredProjectObjectVersion = 77;
 			projectDirPath = "";
@@ -880,9 +880,9 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		892EA07414F569ECB279FE00 /* XCLocalSwiftPackageReference "../ChunUI" */ = {
+		3A1D3276B3C25931EDBCCCEB /* XCLocalSwiftPackageReference "Packages/ChunUI" */ = {
 			isa = XCLocalSwiftPackageReference;
-			relativePath = ../ChunUI;
+			relativePath = Packages/ChunUI;
 		};
 /* End XCLocalSwiftPackageReference section */
 

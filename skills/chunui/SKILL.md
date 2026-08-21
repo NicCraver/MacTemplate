@@ -5,7 +5,7 @@ description: Build iOS apps with the ChunUI design system (Monochrome texture ex
 
 # ChunUI 开发技能
 
-ChunUI 是从生产级 iOS 应用 Zinner（阿奇/Chat0IM）提取的 SwiftUI 设计系统。
+ChunUI 是从生产级 iOS 应用 Zinner（阿奇/Chat0IM）提取的 SwiftUI 设计系统。本仓库把它作为 `Packages/ChunUI` 内置，专供这个 macOS App 使用。
 **使命：让你用它搭积木，搭出 Chat0IM 同级别 UI 质感的产品。**
 
 ## 目录（按需深入）

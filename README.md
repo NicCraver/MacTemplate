@@ -1,6 +1,6 @@
 # MacTemplate
 
-macOS 15 SwiftUI 日常开发骨架。依赖旁边的 [ChunUI](../ChunUI)：双栏窗口、菜单命令、系统设置、关于窗口、品牌色换肤。
+macOS 15 SwiftUI 日常开发骨架。设计系统源码在本仓库 `Packages/ChunUI`：双栏窗口、菜单命令、设置、关于窗口、品牌色换肤。
 
 ## 运行
 
@@ -22,21 +22,14 @@ pnpm run start
 
 `rename.sh` 会把类型名、bundle id 和 UserDefaults 前缀 `macTemplate` 一起换成新名字。然后改 `AppSection`（`primary` + `destination`）和 `Features/` 里的页面。菜单、「前往」快捷键、菜单栏会跟 `AppSection.menuOrder` 走。
 
-ChunUI 默认走 `../ChunUI`；仓库搬走后改 `project.yml` 的 package path，或换成：
-
-```yaml
-packages:
-  ChunUI:
-    url: https://github.com/liseami/ChunUI
-    branch: main
-```
+视觉组件在 `Packages/ChunUI`。唯一远程 SPM 依赖是按钮质感库 [Pow](https://github.com/EmergeTools/Pow)。
 
 ## 已经预埋的
 
 | 能力 | 入口 |
 |---|---|
 | App 图标 | `Resources/Assets.xcassets/AppIcon.appiconset` |
-| 侧栏：概览 / 资料库，设置钉在最底部 | `Sources/Navigation/` |
+| 侧栏：概览 / 资料库 / 基础组件，设置钉在最底部 | `Sources/Navigation/` |
 | 前往菜单 ⌘1 / ⌘2 / ⌘3 | `AppSection.menuOrder` → `AppCommands` |
 | 设置页 | 侧栏「设置」 |
 | 关于窗口 | 菜单「关于」 |

@@ -1,14 +1,6 @@
 # 接入与初始化
 
-## SPM 引入
-
-```swift
-// Xcode: File → Add Package Dependencies → https://github.com/liseami/ChunUI (branch: main)
-// 或 Package.swift:
-.package(url: "https://github.com/liseami/ChunUI", branch: "main")
-```
-
-iOS 18.6+。唯一第三方依赖 Pow（自动带入）。
+本仓库已内置 `Packages/ChunUI`，App 直接 `import ChunUI`。唯一远程依赖是 Pow（按钮 glow/shake）。
 
 ## 一行换肤（App 启动首行，先于任何视图创建）
 

@@ -5,7 +5,7 @@ description: Native macOS SwiftUI app template rules — WindowGroup, Settings s
 
 # MacTemplate
 
-独立 macOS App 骨架。ChunUI 管质感，SwiftUI Scene 管窗口。
+独立 macOS App 骨架。视觉组件源码在本仓库 `Packages/ChunUI`，SwiftUI Scene 管窗口。
 
 ## 三个 Scene
 

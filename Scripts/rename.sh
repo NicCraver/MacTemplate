@@ -37,7 +37,7 @@ replace_in_tree() {
   while IFS= read -r file; do
     perl -i -pe "s/\Q${from}\E/${to}/g" "$file"
   done < <(find . \
-    \( -path './.git' -o -path './skills/chunui' -o -path './DerivedData' -o -path './.build' -o -path './node_modules' \) -prune \
+    \( -path './.git' -o -path './Packages' -o -path './skills/chunui' -o -path './DerivedData' -o -path './.build' -o -path './node_modules' \) -prune \
     -o -type f \( -name '*.swift' -o -name '*.yml' -o -name '*.yaml' -o -name '*.md' -o -name '*.sh' -o -name '*.json' \) -print)
 }
 

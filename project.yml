@@ -6,7 +6,7 @@ options:
     macOS: "15.0"
 packages:
   ChunUI:
-    path: ../ChunUI
+    path: Packages/ChunUI
 settings:
   base:
     SWIFT_VERSION: "6.0"

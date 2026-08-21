@@ -6,12 +6,12 @@
 
 **Architecture:** xcodegen App + Tests；Theme/Session 注入 Environment；三个 Scene；资料库内存占位。
 
-**Tech Stack:** SwiftUI, macOS 15, xcodegen, ChunUI（本地 SPM）, Swift Testing
+**Tech Stack:** SwiftUI, macOS 15, xcodegen, 本仓库 `Packages/ChunUI`, Swift Testing
 
 ## Global Constraints
 
 - macOS 15.0+；Swift 5 语言模式 + 默认 MainActor + Approachable Concurrency
-- SPM 依赖 `../ChunUI` 产品 `ChunUI`
+- SPM 依赖本仓库 `Packages/ChunUI` 产品 `ChunUI`
 - 视觉：Color.cc / Font.cc / PikaIcon；唯一彩色为 `Color.cc.primary`
 - Mac 窗口用 SwiftUI Scene，不走 ChunUI UIKit AppHelper
 - 无沙盒、无公证、无 Sparkle、无 SwiftData
@@ -29,7 +29,7 @@
 - Create: `Sources/Settings/SettingsRootView.swift`, `GeneralSettingsView.swift`, `AppearanceSettingsView.swift`
 - Create: `Sources/Windows/AboutView.swift`
 - Create: `Tests/*.swift`
-- Copy: `skills/chunui/` from `../ChunUI/skills/chunui`
+- Copy: `skills/chunui/` from design-system skill docs
 - Create: `skills/mac-template/SKILL.md`
 
 ### Task 1: 工程骨架与纯逻辑

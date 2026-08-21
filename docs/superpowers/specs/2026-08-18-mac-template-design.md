@@ -5,7 +5,7 @@
 
 ## 目标
 
-独立的 macOS 15+ SwiftUI 工程，依赖本地 `../ChunUI`。复制仓库、跑 rename 脚本后即可开新 App。覆盖窗口壳、侧栏导航、菜单命令、设置持久化、关于窗口。不含沙盒/公证/Sparkle。
+独立的 macOS 15+ SwiftUI 工程。设计系统源码在本仓库 `Packages/ChunUI`。复制仓库、跑 rename 脚本后即可开新 App。覆盖窗口壳、侧栏导航、菜单命令、设置持久化、关于窗口。不含沙盒/公证/Sparkle。
 
 ## 架构
 
@@ -57,4 +57,4 @@ xcodegen generate
 open NewName.xcodeproj   # 或仍为生成后的工程名，以脚本改写的 project.yml 为准
 ```
 
-SPM 路径保持 `../ChunUI`，拷到别处时改 `project.yml` 的 package path 或 git URL。
+SPM 只远程拉 Pow。ChunUI 源码在本仓库 `Packages/ChunUI`。
