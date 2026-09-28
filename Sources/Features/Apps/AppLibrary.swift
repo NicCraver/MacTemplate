@@ -7,7 +7,7 @@ import Observation
 @Observable
 final class AppLibrary {
     enum ViewMode: Int { case grid, list }
-    enum SortKey: Int { case name, date, size, frequent }
+    enum SortKey: Int { case name, date, size, frequent, manual }
     enum Category: Int, CaseIterable {
         case all, favorites, mostUsed, recentlyUpdated, homeFolder, systemFolder
 
@@ -70,6 +70,7 @@ final class AppLibrary {
     private(set) var launchCounts: [String: Int]
     private(set) var favoriteIDs: Set<String>
     private(set) var favoriteOrder: [String]
+    private(set) var customOrder: [String] = []
 
     private var hasLoaded = false
     private var scanGeneration = 0
@@ -86,6 +87,7 @@ final class AppLibrary {
         launchCounts = defaults.dictionary(forKey: PreferenceKey.appsLaunchCounts) as? [String: Int] ?? [:]
         favoriteIDs = Set(defaults.stringArray(forKey: PreferenceKey.appsFavorites) ?? [])
         favoriteOrder = defaults.stringArray(forKey: PreferenceKey.appsFavoriteOrder) ?? []
+        customOrder = defaults.stringArray(forKey: PreferenceKey.appsCustomOrder) ?? []
         recomputeVisible()
     }
 
@@ -108,6 +110,15 @@ final class AppLibrary {
                 if ai != bi { return ai < bi }
                 return $0.name.localizedStandardCompare($1.name) == .orderedAscending
             }
+        } else if sortKey == .manual {
+            // 手动排序：按用户拖拽生成的顺序；没排过的按名称排在最后。
+            let orderIndex = Dictionary(uniqueKeysWithValues: customOrder.enumerated().map { ($1, $0) })
+            apps.sort {
+                let ai = orderIndex[$0.identityKey] ?? Int.max
+                let bi = orderIndex[$1.identityKey] ?? Int.max
+                if ai != bi { return ai < bi }
+                return $0.name.localizedStandardCompare($1.name) == .orderedAscending
+            }
         } else {
             switch sortKey {
             case .name:
@@ -122,6 +133,8 @@ final class AppLibrary {
                     if lhs != rhs { return lhs > rhs }
                     return $0.name.localizedStandardCompare($1.name) == .orderedAscending
                 }
+            case .manual:
+                break
             }
         }
         visibleApps = apps
@@ -177,21 +190,34 @@ final class AppLibrary {
         recomputeVisible()
     }
 
-    /// 收藏视图内拖拽排序：把 dragged 移到 target 之前。
-    func moveFavorite(_ draggedID: String, before targetID: String) {
-        guard draggedID != targetID else { return }
-        favoriteIDs.insert(draggedID)
-        favoriteIDs.insert(targetID)
+    /// 拖拽重排：把 dragged 移到 target 之前。
+    /// - 收藏分类：写回收藏顺序
+    /// - 其他分类：写入手动排序，并自动把排序方式切到「手动」（否则重排会被覆盖、看起来无效）
+    func reorder(draggedID: String, before targetID: String) {
+        let sequence = visibleApps.map(\.identityKey)
+        guard let from = sequence.firstIndex(of: draggedID),
+              let to = sequence.firstIndex(of: targetID), from != to else { return }
+        var ordered = sequence
+        let dragged = ordered.remove(at: from)
+        let insertIndex = ordered.firstIndex(of: targetID) ?? ordered.count
+        ordered.insert(dragged, at: insertIndex)
 
-        var newOrder: [String] = []
-        for id in favoriteOrder where id != draggedID {
-            if id == targetID { newOrder.append(draggedID) }
-            newOrder.append(id)
+        if category == .favorites {
+            var merged = ordered
+            merged += favoriteOrder.filter { !ordered.contains($0) }
+            favoriteOrder = merged
+            persistFavorites()
+        } else {
+            var merged = ordered
+            merged += customOrder.filter { !ordered.contains($0) }
+            merged += apps.map(\.identityKey).filter { !merged.contains($0) }
+            customOrder = merged
+            defaults.set(customOrder, forKey: PreferenceKey.appsCustomOrder)
+            if sortKey != .manual {
+                sortKey = .manual
+                return   // didSet 已触发重算
+            }
         }
-        if !newOrder.contains(draggedID) { newOrder.append(draggedID) }
-        favoriteOrder = newOrder
-
-        persistFavorites()
         recomputeVisible()
     }
 

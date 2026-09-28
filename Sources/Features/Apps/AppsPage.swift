@@ -132,6 +132,7 @@ struct AppsPage: View {
                 Text("最近修改").tag(AppLibrary.SortKey.date)
                 Text("大小").tag(AppLibrary.SortKey.size)
                 Text("最常用").tag(AppLibrary.SortKey.frequent)
+                Text("手动排序").tag(AppLibrary.SortKey.manual)
             }
             .pickerStyle(.inline)
             .labelsHidden()
@@ -291,9 +292,8 @@ private struct AppCard: View {
         }
         .onDrag { NSItemProvider(object: app.identityKey as NSString) }
         .dropDestination(for: String.self) { items, _ in
-            guard library.category == .favorites,
-                  let dragged = items.first, dragged != app.identityKey else { return false }
-            library.moveFavorite(dragged, before: app.identityKey)
+            guard let dragged = items.first, dragged != app.identityKey else { return false }
+            library.reorder(draggedID: dragged, before: app.identityKey)
             return true
         } isTargeted: { dropTargeted = $0 }
         .contextMenu { AppContextActions(app: app, library: library, onTrashRequest: onTrashRequest) }
@@ -394,9 +394,8 @@ private struct AppRow: View {
         .buttonStyle(AppPressButtonStyle())
         .onDrag { NSItemProvider(object: app.identityKey as NSString) }
         .dropDestination(for: String.self) { items, _ in
-            guard library.category == .favorites,
-                  let dragged = items.first, dragged != app.identityKey else { return false }
-            library.moveFavorite(dragged, before: app.identityKey)
+            guard let dragged = items.first, dragged != app.identityKey else { return false }
+            library.reorder(draggedID: dragged, before: app.identityKey)
             return true
         } isTargeted: { dropTargeted = $0 }
         .contextMenu { AppContextActions(app: app, library: library, onTrashRequest: onTrashRequest) }
