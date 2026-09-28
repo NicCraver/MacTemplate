@@ -64,7 +64,9 @@ nonisolated enum AppScanner {
                     seenBundleIDs.insert(bundleID)
                 }
 
-                let name = fm.displayName(atPath: target.path)
+                let rawName = fm.displayName(atPath: target.path)
+                // Launchpad 风格：展示名不带 .app 后缀
+                let name = rawName.lowercased().hasSuffix(".app") ? String(rawName.dropLast(4)) : rawName
                 let rawVersion = bundle?.infoDictionary?["CFBundleShortVersionString"] as? String
                 let version = rawVersion.flatMap { $0.isEmpty ? nil : $0 }
                 let modified = (try? target.resourceValues(forKeys: [.contentModificationDateKey]))?

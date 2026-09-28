@@ -3,6 +3,7 @@ import SwiftUI
 
 struct AppsPage: View {
     @Environment(AppLibrary.self) private var library
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var query = ""
     @State private var selectedID: String?
     @State private var hoveredID: String?
@@ -25,7 +26,7 @@ struct AppsPage: View {
             library.pruneIconCache()
         }
         .confirmationDialog(
-            pendingTrash.map { "将 “\($0.name)” 移到废纸篓？" } ?? "",
+            pendingTrash.map { "将 “\($0.displayName)” 移到废纸篓？" } ?? "",
             isPresented: Binding(
                 get: { pendingTrash != nil },
                 set: { if !$0 { pendingTrash = nil } }
@@ -50,7 +51,7 @@ struct AppsPage: View {
         if filtered {
             return "显示 \(library.visibleApps.count) / \(total) 个应用"
         }
-        return "共 \(total) 个应用 · \(AppScanner.sourcesLabel)"
+        return "共 \(total) 个应用"
     }
 
     // MARK: - Header controls
@@ -79,6 +80,7 @@ struct AppsPage: View {
             }
             .buttonStyle(.plain)
             .help("重新扫描")
+            .accessibilityLabel("重新扫描")
         }
     }
 
@@ -86,7 +88,7 @@ struct AppsPage: View {
         @Bindable var library = library
         return HStack(spacing: 8) {
             PikaIcon(AppIconName.search, size: 14, color: .cc.mutedForeground)
-            TextField("搜索", text: $library.searchText)
+            TextField("搜索应用", text: $library.searchText)
                 .textFieldStyle(.plain)
                 .ccText(font: .cc.sm, color: .cc.foreground)
                 .focused($searchFocused)
@@ -101,6 +103,7 @@ struct AppsPage: View {
                 }
                 .buttonStyle(.plain)
                 .help("清除搜索")
+                .accessibilityLabel("清除搜索")
             }
         }
         .padding(.horizontal, 12)
@@ -145,6 +148,7 @@ struct AppsPage: View {
         .menuStyle(.button)
         .fixedSize()
         .menuIndicator(.visible)
+        .accessibilityLabel("排序方式")
     }
 
     private var filterMenu: some View {
@@ -172,6 +176,7 @@ struct AppsPage: View {
         .fixedSize()
         .menuIndicator(.visible)
         .help("包含 /System/Applications 时开关「显示系统应用」")
+        .accessibilityLabel("分类筛选")
     }
 
     // MARK: - Content
@@ -212,7 +217,7 @@ struct AppsPage: View {
 
     private var emptyDetail: String {
         if !query.trimmingCharacters(in: .whitespaces).isEmpty { return "换个关键词，或清空搜索" }
-        return "换个分类看看，或在设置里开启「显示系统应用」"
+        return "换个分类看看，或在「分类」菜单里开启「显示系统应用」"
     }
 
     private var gridView: some View {
@@ -229,38 +234,43 @@ struct AppsPage: View {
 
     private func appCard(_ app: AppEntry) -> some View {
         let selected = selectedID == app.id
-        return VStack(spacing: 8) {
-            Image(nsImage: app.icon)
-                .resizable()
-                .frame(width: 64, height: 64)
-            Text(app.name)
-                .ccText(font: .cc.sm, color: .cc.foreground)
-                .lineLimit(2)
-                .multilineTextAlignment(.center)
-            Group {
+        return Button {
+            selectedID = app.id
+        } label: {
+            VStack(spacing: 8) {
+                Image(nsImage: app.icon)
+                    .resizable()
+                    .frame(width: 64, height: 64)
+                Text(app.displayName)
+                    .ccText(font: .cc.sm, color: .cc.foreground)
+                    .lineLimit(2)
+                    .multilineTextAlignment(.center)
                 if let version = app.version {
                     Text("v\(version)")
-                } else {
-                    Text(" ")
+                        .ccText(font: .cc.sm, color: .cc.mutedForeground)
                 }
             }
-            .ccText(font: .cc.sm, color: .cc.mutedForeground)
+            .padding(.vertical, 16)
+            .padding(.horizontal, 8)
+            .frame(maxWidth: .infinity)
+            .background {
+                RoundedRectangle(cornerRadius: 12, style: .continuous)
+                    .fill(rowBackground(selected: selected, id: app.id))
+            }
+            .contentShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
         }
-        .padding(.vertical, 16)
-        .padding(.horizontal, 8)
-        .frame(maxWidth: .infinity)
-        .background {
-            RoundedRectangle(cornerRadius: 12, style: .continuous)
-                .fill(rowBackground(selected: selected, id: app.id))
-        }
-        .contentShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
-        .onTapGesture(count: 2) { library.open(app) }
-        .onTapGesture { selectedID = app.id }
+        .buttonStyle(AppPressButtonStyle())
+        .simultaneousGesture(
+            TapGesture(count: 2).onEnded { library.open(app) }
+        )
         .contextMenu { contextActions(app) }
         .onHover { inside in
             hoveredID = inside ? app.id : (hoveredID == app.id ? nil : hoveredID)
         }
-        .accessibilityLabel(app.name)
+        .animation(reduceMotion ? nil : .easeInOut(duration: 0.15), value: hoveredID)
+        .help(app.url.path)
+        .accessibilityHint("双击打开应用")
+        .accessibilityAddTraits(selected ? [.isSelected] : [])
         .accessibilityIdentifier("apps.card.\(app.id)")
     }
 
@@ -283,45 +293,57 @@ struct AppsPage: View {
 
     private func listRow(_ app: AppEntry) -> some View {
         let selected = selectedID == app.id
-        return HStack(spacing: 14) {
-            Image(nsImage: app.icon)
-                .resizable()
-                .frame(width: 32, height: 32)
+        return Button {
+            selectedID = app.id
+        } label: {
+            HStack(spacing: 14) {
+                Image(nsImage: app.icon)
+                    .resizable()
+                    .frame(width: 32, height: 32)
 
-            VStack(alignment: .leading, spacing: 3) {
-                Text(app.name)
-                    .ccText(font: .cc.base, color: .cc.foreground)
-                    .lineLimit(1)
-                Text(app.bundleID ?? app.url.path)
+                VStack(alignment: .leading, spacing: 3) {
+                    Text(app.displayName)
+                        .ccText(font: .cc.base, color: .cc.foreground)
+                        .lineLimit(1)
+                    Text(app.bundleID ?? app.url.path)
+                        .ccText(font: .cc.sm, color: .cc.mutedForeground)
+                        .lineLimit(1)
+                }
+
+                Spacer(minLength: 8)
+
+                Text(app.displaySize)
                     .ccText(font: .cc.sm, color: .cc.mutedForeground)
-                    .lineLimit(1)
+                    .monospacedDigit()
+                    .frame(width: 72, alignment: .trailing)
+                Text(app.displayDate)
+                    .ccText(font: .cc.sm, color: .cc.mutedForeground)
+                    .monospacedDigit()
+                    .frame(width: 120, alignment: .trailing)
             }
-
-            Spacer(minLength: 8)
-
-            Text(app.displaySize)
-                .ccText(font: .cc.sm, color: .cc.mutedForeground)
-                .frame(width: 72, alignment: .trailing)
-            Text(app.displayDate)
-                .ccText(font: .cc.sm, color: .cc.mutedForeground)
-                .frame(width: 120, alignment: .trailing)
+            .padding(.horizontal, 16)
+            .padding(.vertical, 12)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background {
+                RoundedRectangle(cornerRadius: 10, style: .continuous)
+                    .fill(rowBackground(selected: selected, id: app.id))
+                    .padding(.horizontal, 4)
+            }
+            .contentShape(Rectangle())
         }
-        .padding(.horizontal, 16)
-        .padding(.vertical, 12)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background {
-            RoundedRectangle(cornerRadius: 10, style: .continuous)
-                .fill(rowBackground(selected: selected, id: app.id))
-                .padding(.horizontal, 4)
-        }
-        .contentShape(Rectangle())
-        .onTapGesture(count: 2) { library.open(app) }
-        .onTapGesture { selectedID = app.id }
+        .buttonStyle(AppPressButtonStyle())
+        .simultaneousGesture(
+            TapGesture(count: 2).onEnded { library.open(app) }
+        )
         .contextMenu { contextActions(app) }
         .onHover { inside in
             hoveredID = inside ? app.id : (hoveredID == app.id ? nil : hoveredID)
         }
-        .accessibilityLabel(app.name)
+        .animation(reduceMotion ? nil : .easeInOut(duration: 0.15), value: hoveredID)
+        .help(app.url.path)
+        .accessibilityLabel("\(app.displayName)，\(app.displaySize)")
+        .accessibilityHint("双击打开应用")
+        .accessibilityAddTraits(selected ? [.isSelected] : [])
         .accessibilityIdentifier("apps.row.\(app.id)")
     }
 
@@ -339,4 +361,18 @@ struct AppsPage: View {
         Divider()
         Button("移到废纸篓…", role: .destructive) { pendingTrash = app }
     }
+}
+
+/// 按压时轻微缩小并降低不透明度，给卡片和行一致的按压反馈。
+struct AppPressButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .scaleEffect(configuration.isPressed ? 0.98 : 1)
+            .opacity(configuration.isPressed ? 0.85 : 1)
+            .animation(.easeOut(duration: 0.12), value: configuration.isPressed)
+    }
+}
+
+extension ButtonStyle where Self == AppPressButtonStyle {
+    static var appPress: AppPressButtonStyle { AppPressButtonStyle() }
 }
