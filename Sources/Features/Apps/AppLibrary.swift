@@ -26,16 +26,27 @@ final class AppLibrary {
     }
 
     private(set) var apps: [AppEntry] = []
+    /// 缓存后的可见列表：只在数据/筛选/排序变化时重算一次，
+    /// 滚动与悬停不会反复触发全量过滤排序（这是之前滚动卡顿的根因）。
+    private(set) var visibleApps: [AppEntry] = []
     private(set) var isScanning = false
-    var searchText: String = ""
+    var searchText: String = "" {
+        didSet { recomputeVisible() }
+    }
     var viewMode: ViewMode {
         didSet { defaults.set(viewMode.rawValue, forKey: PreferenceKey.appsViewMode) }
     }
     var sortKey: SortKey {
-        didSet { defaults.set(sortKey.rawValue, forKey: PreferenceKey.appsSortKey) }
+        didSet {
+            defaults.set(sortKey.rawValue, forKey: PreferenceKey.appsSortKey)
+            recomputeVisible()
+        }
     }
     var category: Category {
-        didSet { defaults.set(category.rawValue, forKey: PreferenceKey.appsCategory) }
+        didSet {
+            defaults.set(category.rawValue, forKey: PreferenceKey.appsCategory)
+            recomputeVisible()
+        }
     }
     var includeSystemApps: Bool {
         didSet {
@@ -59,11 +70,12 @@ final class AppLibrary {
         category = Category(rawValue: defaults.integer(forKey: PreferenceKey.appsCategory)) ?? .all
         includeSystemApps = defaults.object(forKey: PreferenceKey.appsIncludeSystem) as? Bool ?? false
         launchCounts = defaults.dictionary(forKey: PreferenceKey.appsLaunchCounts) as? [String: Int] ?? [:]
+        recomputeVisible()
     }
 
     var totalCount: Int { apps.count }
 
-    var visibleApps: [AppEntry] {
+    private func recomputeVisible() {
         var apps = apps.filter { matchesCategory(category, app: $0) }
         if !searchText.isEmpty {
             let query = searchText.lowercased()
@@ -86,7 +98,7 @@ final class AppLibrary {
                 return $0.name.localizedStandardCompare($1.name) == .orderedAscending
             }
         }
-        return apps
+        visibleApps = apps
     }
 
     func categoryCount(_ category: Category) -> Int {
@@ -140,6 +152,7 @@ final class AppLibrary {
     private func finishScan(apps: [AppEntry], generation: Int) {
         guard generation == scanGeneration else { return }
         self.apps = apps
+        recomputeVisible()
         isScanning = false
         watcher.watch(paths: AppScanner.directories(includeSystemApps: includeSystemApps).map(\.path))
         watcher.onChange = { [weak self] in self?.load() }
@@ -172,7 +185,10 @@ final class AppLibrary {
                 changed = true
             }
         }
-        if changed { apps = updated }
+        if changed {
+            apps = updated
+            recomputeVisible()
+        }
     }
 
     // MARK: - Launch actions
@@ -182,6 +198,7 @@ final class AppLibrary {
     func open(_ app: AppEntry) {
         launchCounts[app.identityKey, default: 0] += 1
         defaults.set(launchCounts, forKey: PreferenceKey.appsLaunchCounts)
+        recomputeVisible()
         NSWorkspace.shared.openApplication(at: app.url, configuration: NSWorkspace.OpenConfiguration())
     }
 

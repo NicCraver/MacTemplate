@@ -5,12 +5,10 @@ struct AppsPage: View {
     @Environment(AppLibrary.self) private var library
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var query = ""
-    @State private var hoveredID: String?
     @State private var pendingTrash: AppEntry?
     @FocusState private var searchFocused: Bool
 
     var body: some View {
-        @Bindable var library = library
         MacPageScaffold(
             title: "应用",
             subtitle: subtitle,
@@ -225,13 +223,35 @@ struct AppsPage: View {
             spacing: 14
         ) {
             ForEach(library.visibleApps) { app in
-                appCard(app)
+                AppCard(app: app, library: library) { pendingTrash = $0 }
             }
         }
         .accessibilityIdentifier("apps.grid")
     }
 
-    private func appCard(_ app: AppEntry) -> some View {
+    private var listView: some View {
+        CCAppleCard(radius: 16) {
+            LazyVStack(spacing: 0) {
+                ForEach(library.visibleApps) { app in
+                    AppRow(app: app, library: library) { pendingTrash = $0 }
+                }
+            }
+        }
+        .accessibilityIdentifier("apps.list")
+    }
+}
+
+// MARK: - Grid card
+
+/// 独立视图：悬停状态本地化，滚动/悬停只重渲染当前卡片，不牵动整页。
+private struct AppCard: View {
+    let app: AppEntry
+    let library: AppLibrary
+    let onTrashRequest: (AppEntry) -> Void
+    @State private var hovered = false
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
+    var body: some View {
         Button {
             library.open(app)
         } label: {
@@ -253,39 +273,30 @@ struct AppsPage: View {
             .frame(maxWidth: .infinity)
             .background {
                 RoundedRectangle(cornerRadius: 12, style: .continuous)
-                    .fill(rowBackground(id: app.id))
+                    .fill(hovered ? Color.cc.muted.opacity(0.55) : .clear)
             }
             .contentShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
         }
         .buttonStyle(AppPressButtonStyle())
-        .contextMenu { contextActions(app) }
-        .onHover { inside in
-            hoveredID = inside ? app.id : (hoveredID == app.id ? nil : hoveredID)
-        }
-        .animation(reduceMotion ? nil : .easeInOut(duration: 0.15), value: hoveredID)
+        .contextMenu { AppContextActions(app: app, library: library, onTrashRequest: onTrashRequest) }
+        .onHover { hovered = $0 }
+        .animation(reduceMotion ? nil : .easeInOut(duration: 0.15), value: hovered)
         .help(app.url.path)
         .accessibilityHint("点按打开应用")
         .accessibilityIdentifier("apps.card.\(app.id)")
     }
+}
 
-    private var listView: some View {
-        CCAppleCard(radius: 16) {
-            VStack(spacing: 0) {
-                ForEach(Array(library.visibleApps.enumerated()), id: \.element.id) { index, app in
-                    listRow(app)
-                    if index < library.visibleApps.count - 1 {
-                        Rectangle()
-                            .fill(Color.cc.border.opacity(0.5))
-                            .frame(height: CGFloat.cc.hairline)
-                            .padding(.leading, 66)
-                    }
-                }
-            }
-        }
-        .accessibilityIdentifier("apps.list")
-    }
+// MARK: - List row
 
-    private func listRow(_ app: AppEntry) -> some View {
+private struct AppRow: View {
+    let app: AppEntry
+    let library: AppLibrary
+    let onTrashRequest: (AppEntry) -> Void
+    @State private var hovered = false
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
+    var body: some View {
         Button {
             library.open(app)
         } label: {
@@ -319,34 +330,35 @@ struct AppsPage: View {
             .frame(maxWidth: .infinity, alignment: .leading)
             .background {
                 RoundedRectangle(cornerRadius: 10, style: .continuous)
-                    .fill(rowBackground(id: app.id))
+                    .fill(hovered ? Color.cc.muted.opacity(0.55) : .clear)
                     .padding(.horizontal, 4)
             }
             .contentShape(Rectangle())
         }
         .buttonStyle(AppPressButtonStyle())
-        .contextMenu { contextActions(app) }
-        .onHover { inside in
-            hoveredID = inside ? app.id : (hoveredID == app.id ? nil : hoveredID)
-        }
-        .animation(reduceMotion ? nil : .easeInOut(duration: 0.15), value: hoveredID)
+        .contextMenu { AppContextActions(app: app, library: library, onTrashRequest: onTrashRequest) }
+        .onHover { hovered = $0 }
+        .animation(reduceMotion ? nil : .easeInOut(duration: 0.15), value: hovered)
         .help(app.url.path)
         .accessibilityLabel("\(app.displayName)，\(app.displaySize)")
         .accessibilityHint("点按打开应用")
         .accessibilityIdentifier("apps.row.\(app.id)")
     }
+}
 
-    private func rowBackground(id: String) -> Color {
-        hoveredID == id ? Color.cc.muted.opacity(0.55) : .clear
-    }
+// MARK: - Shared context menu
 
-    @ViewBuilder
-    private func contextActions(_ app: AppEntry) -> some View {
+private struct AppContextActions: View {
+    let app: AppEntry
+    let library: AppLibrary
+    let onTrashRequest: (AppEntry) -> Void
+
+    var body: some View {
         Button("打开") { library.open(app) }
         Button("在访达中显示") { library.reveal(app) }
         Button("拷贝路径") { library.copyPath(app) }
         Divider()
-        Button("移到废纸篓…", role: .destructive) { pendingTrash = app }
+        Button("移到废纸篓…", role: .destructive) { onTrashRequest(app) }
     }
 }
 
@@ -358,8 +370,4 @@ struct AppPressButtonStyle: ButtonStyle {
             .opacity(configuration.isPressed ? 0.85 : 1)
             .animation(.easeOut(duration: 0.12), value: configuration.isPressed)
     }
-}
-
-extension ButtonStyle where Self == AppPressButtonStyle {
-    static var appPress: AppPressButtonStyle { AppPressButtonStyle() }
 }
