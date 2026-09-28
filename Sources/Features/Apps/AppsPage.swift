@@ -5,7 +5,6 @@ struct AppsPage: View {
     @Environment(AppLibrary.self) private var library
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var query = ""
-    @State private var selectedID: String?
     @State private var hoveredID: String?
     @State private var pendingTrash: AppEntry?
     @FocusState private var searchFocused: Bool
@@ -233,9 +232,8 @@ struct AppsPage: View {
     }
 
     private func appCard(_ app: AppEntry) -> some View {
-        let selected = selectedID == app.id
-        return Button {
-            selectedID = app.id
+        Button {
+            library.open(app)
         } label: {
             VStack(spacing: 8) {
                 Image(nsImage: app.icon)
@@ -255,22 +253,18 @@ struct AppsPage: View {
             .frame(maxWidth: .infinity)
             .background {
                 RoundedRectangle(cornerRadius: 12, style: .continuous)
-                    .fill(rowBackground(selected: selected, id: app.id))
+                    .fill(rowBackground(id: app.id))
             }
             .contentShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
         }
         .buttonStyle(AppPressButtonStyle())
-        .simultaneousGesture(
-            TapGesture(count: 2).onEnded { library.open(app) }
-        )
         .contextMenu { contextActions(app) }
         .onHover { inside in
             hoveredID = inside ? app.id : (hoveredID == app.id ? nil : hoveredID)
         }
         .animation(reduceMotion ? nil : .easeInOut(duration: 0.15), value: hoveredID)
         .help(app.url.path)
-        .accessibilityHint("双击打开应用")
-        .accessibilityAddTraits(selected ? [.isSelected] : [])
+        .accessibilityHint("点按打开应用")
         .accessibilityIdentifier("apps.card.\(app.id)")
     }
 
@@ -292,9 +286,8 @@ struct AppsPage: View {
     }
 
     private func listRow(_ app: AppEntry) -> some View {
-        let selected = selectedID == app.id
-        return Button {
-            selectedID = app.id
+        Button {
+            library.open(app)
         } label: {
             HStack(spacing: 14) {
                 Image(nsImage: app.icon)
@@ -326,15 +319,12 @@ struct AppsPage: View {
             .frame(maxWidth: .infinity, alignment: .leading)
             .background {
                 RoundedRectangle(cornerRadius: 10, style: .continuous)
-                    .fill(rowBackground(selected: selected, id: app.id))
+                    .fill(rowBackground(id: app.id))
                     .padding(.horizontal, 4)
             }
             .contentShape(Rectangle())
         }
         .buttonStyle(AppPressButtonStyle())
-        .simultaneousGesture(
-            TapGesture(count: 2).onEnded { library.open(app) }
-        )
         .contextMenu { contextActions(app) }
         .onHover { inside in
             hoveredID = inside ? app.id : (hoveredID == app.id ? nil : hoveredID)
@@ -342,15 +332,12 @@ struct AppsPage: View {
         .animation(reduceMotion ? nil : .easeInOut(duration: 0.15), value: hoveredID)
         .help(app.url.path)
         .accessibilityLabel("\(app.displayName)，\(app.displaySize)")
-        .accessibilityHint("双击打开应用")
-        .accessibilityAddTraits(selected ? [.isSelected] : [])
+        .accessibilityHint("点按打开应用")
         .accessibilityIdentifier("apps.row.\(app.id)")
     }
 
-    private func rowBackground(selected: Bool, id: String) -> Color {
-        if selected { return Color.cc.primary.opacity(0.16) }
-        if hoveredID == id { return Color.cc.muted.opacity(0.55) }
-        return .clear
+    private func rowBackground(id: String) -> Color {
+        hoveredID == id ? Color.cc.muted.opacity(0.55) : .clear
     }
 
     @ViewBuilder
