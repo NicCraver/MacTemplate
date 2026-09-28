@@ -261,12 +261,6 @@ private struct AppCard: View {
                 Image(nsImage: app.icon)
                     .resizable()
                     .frame(width: 64, height: 64)
-                    .overlay(alignment: .topTrailing) {
-                        if library.isFavorite(app) {
-                            PikaIcon(AppIconName.favoriteFilled, size: 14, color: .cc.primary)
-                                .offset(x: 5, y: -3)
-                        }
-                    }
                 Text(app.displayName)
                     .ccText(font: .cc.sm, color: .cc.foreground)
                     .lineLimit(2)
@@ -292,6 +286,9 @@ private struct AppCard: View {
             .contentShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
         }
         .buttonStyle(AppPressButtonStyle())
+        .overlay(alignment: .topTrailing) {
+            favoriteButton.padding(6)
+        }
         .onDrag { NSItemProvider(object: app.identityKey as NSString) }
         .dropDestination(for: String.self) { items, _ in
             guard library.category == .favorites,
@@ -304,8 +301,31 @@ private struct AppCard: View {
         .animation(reduceMotion ? nil : .easeInOut(duration: 0.15), value: hovered)
         .animation(reduceMotion ? nil : .easeInOut(duration: 0.15), value: dropTargeted)
         .help(app.url.path)
-        .accessibilityHint("点按打开应用，拖到侧边栏「收藏」可收藏")
+        .accessibilityHint("点按打开应用，右上角星标可收藏")
         .accessibilityIdentifier("apps.card.\(app.id)")
+    }
+
+    /// 右上角收藏星标：已收藏时常显品牌色实心星；未收藏时悬停才出现描边星。
+    private var favoriteButton: some View {
+        let favorited = library.isFavorite(app)
+        let visible = favorited || hovered
+        return Button {
+            library.toggleFavorite(app)
+        } label: {
+            PikaIcon(favorited ? AppIconName.favoriteFilled : AppIconName.favorite,
+                     size: 13,
+                     color: favorited ? .cc.primary : .cc.mutedForeground)
+                .frame(width: 22, height: 22)
+                .background {
+                    Circle().fill(Color.cc.muted.opacity(0.9))
+                }
+                .contentShape(Circle())
+        }
+        .buttonStyle(.plain)
+        .opacity(visible ? 1 : 0)
+        .allowsHitTesting(visible)
+        .help(favorited ? "从收藏中移除" : "添加到收藏")
+        .accessibilityLabel(favorited ? "从收藏中移除" : "添加到收藏")
     }
 }
 
