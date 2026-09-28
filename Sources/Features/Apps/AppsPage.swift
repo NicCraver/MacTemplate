@@ -1,5 +1,6 @@
 import ChunUI
 import SwiftUI
+import UniformTypeIdentifiers
 
 struct AppsPage: View {
     @Environment(AppLibrary.self) private var library
@@ -7,6 +8,11 @@ struct AppsPage: View {
     @State private var query = ""
     @State private var pendingTrash: AppEntry?
     @FocusState private var searchFocused: Bool
+
+    // 拖拽重排状态
+    @State private var draggedID: String?
+    @State private var insertionIndex: Int?
+    @State private var cardFrames: [String: CGRect] = [:]
 
     var body: some View {
         MacPageScaffold(
@@ -21,6 +27,9 @@ struct AppsPage: View {
         .task {
             library.loadIfNeeded()
             library.pruneIconCache()
+        }
+        .onChange(of: library.viewMode) { _, _ in
+            cardFrames = [:]
         }
         .confirmationDialog(
             pendingTrash.map { "将 “\($0.displayName)” 移到废纸篓？" } ?? "",
@@ -218,40 +227,120 @@ struct AppsPage: View {
         return "换个分类看看，或在「分类」菜单里开启「显示系统应用」"
     }
 
+    /// 拖拽期间的计算布局：被拖卡片移到插入点，其余卡片让位。
+    private var arrangedApps: [AppEntry] {
+        var apps = library.visibleApps
+        if let draggedID, let insertionIndex,
+           let from = apps.firstIndex(where: { $0.id == draggedID }) {
+            let item = apps.remove(at: from)
+            apps.insert(item, at: min(insertionIndex, apps.count))
+        }
+        return apps
+    }
+
     private var gridView: some View {
         LazyVGrid(
             columns: [GridItem(.adaptive(minimum: 148), spacing: 14)],
             spacing: 14
         ) {
-            ForEach(library.visibleApps) { app in
-                AppCard(app: app, library: library) { pendingTrash = $0 }
+            ForEach(arrangedApps) { app in
+                if app.id == draggedID {
+                    Color.clear
+                        .accessibilityHidden(true)
+                } else {
+                    AppCard(app: app, library: library,
+                            onDragStart: { draggedID = app.id },
+                            onTrashRequest: { pendingTrash = $0 })
+                        .background(cardFrameReader(id: app.id, space: "appsGridSpace"))
+                }
             }
         }
+        .coordinateSpace(name: "appsGridSpace")
+        .onPreferenceChange(CardFramesKey.self) { cardFrames = $0 }
+        .onDrop(of: [.plainText], delegate: GridDropDelegate(
+            coordinateSpace: "appsGridSpace",
+            indexOfCardAt: { point in
+                let ids = arrangedApps.map(\.id)
+                for (index, id) in ids.enumerated() {
+                    if let frame = cardFrames[id], frame.contains(point) {
+                        return index
+                    }
+                }
+                return nil
+            },
+            onInsert: { insertionIndex = $0 },
+            onPerform: { index in
+                guard let draggedID else { return false }
+                let ok = library.reorder(draggedID: draggedID, insertionIndex: index)
+                self.draggedID = nil
+                self.insertionIndex = nil
+                return ok
+            },
+            onExit: { insertionIndex = nil }
+        ))
         .accessibilityIdentifier("apps.grid")
     }
 
     private var listView: some View {
         CCAppleCard(radius: 16) {
             LazyVStack(spacing: 0) {
-                ForEach(library.visibleApps) { app in
-                    AppRow(app: app, library: library) { pendingTrash = $0 }
+                ForEach(arrangedApps) { app in
+                    if app.id == draggedID {
+                        Color.clear.frame(height: 64)
+                    } else {
+                        AppRow(app: app, library: library,
+                               onDragStart: { draggedID = app.id },
+                               onTrashRequest: { pendingTrash = $0 })
+                            .background(cardFrameReader(id: app.id, space: "appsListSpace"))
+                    }
                 }
             }
         }
+        .coordinateSpace(name: "appsListSpace")
+        .onPreferenceChange(CardFramesKey.self) { cardFrames = $0 }
+        .onDrop(of: [.plainText], delegate: GridDropDelegate(
+            coordinateSpace: "appsListSpace",
+            indexOfCardAt: { point in
+                let ids = arrangedApps.map(\.id)
+                for (index, id) in ids.enumerated() {
+                    if let frame = cardFrames[id], frame.contains(point) {
+                        return index
+                    }
+                }
+                return nil
+            },
+            onInsert: { insertionIndex = $0 },
+            onPerform: { index in
+                guard let draggedID else { return false }
+                let ok = library.reorder(draggedID: draggedID, insertionIndex: index)
+                self.draggedID = nil
+                self.insertionIndex = nil
+                return ok
+            },
+            onExit: { insertionIndex = nil }
+        ))
         .accessibilityIdentifier("apps.list")
+    }
+
+    private func cardFrameReader(id: String, space: String) -> some View {
+        GeometryReader { geo in
+            Color.clear.preference(
+                key: CardFramesKey.self,
+                value: [id: geo.frame(in: .named(space))]
+            )
+        }
     }
 }
 
 // MARK: - Grid card
 
 /// 独立视图：悬停状态本地化，滚动/悬停只重渲染当前卡片，不牵动整页。
-/// 收藏视图内可将卡片拖到另一张卡上重新排序；任何分类下拖拽即可发起收藏。
 private struct AppCard: View {
     let app: AppEntry
     let library: AppLibrary
+    let onDragStart: () -> Void
     let onTrashRequest: (AppEntry) -> Void
     @State private var hovered = false
-    @State private var dropTargeted = false
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
@@ -262,6 +351,12 @@ private struct AppCard: View {
                 Image(nsImage: app.icon)
                     .resizable()
                     .frame(width: 64, height: 64)
+                    .overlay(alignment: .topTrailing) {
+                        if library.isFavorite(app) {
+                            PikaIcon(AppIconName.favoriteFilled, size: 14, color: .cc.primary)
+                                .offset(x: 5, y: -3)
+                        }
+                    }
                 Text(app.displayName)
                     .ccText(font: .cc.sm, color: .cc.foreground)
                     .lineLimit(2)
@@ -278,54 +373,29 @@ private struct AppCard: View {
                 RoundedRectangle(cornerRadius: 12, style: .continuous)
                     .fill(hovered ? Color.cc.muted.opacity(0.55) : .clear)
             }
-            .overlay {
-                if dropTargeted {
-                    RoundedRectangle(cornerRadius: 12, style: .continuous)
-                        .strokeBorder(Color.cc.primary, lineWidth: 2)
-                }
-            }
             .contentShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
         }
         .buttonStyle(AppPressButtonStyle())
-        .overlay(alignment: .topTrailing) {
-            favoriteButton.padding(6)
+        .onDrag {
+            onDragStart()
+            return NSItemProvider(object: app.identityKey as NSString)
         }
-        .onDrag { NSItemProvider(object: app.identityKey as NSString) }
-        .dropDestination(for: String.self) { items, _ in
-            guard let dragged = items.first, dragged != app.identityKey else { return false }
-            library.reorder(draggedID: dragged, before: app.identityKey)
-            return true
-        } isTargeted: { dropTargeted = $0 }
-        .contextMenu { AppContextActions(app: app, library: library, onTrashRequest: onTrashRequest) }
+        .contextMenu {
+            AppContextActions(
+                title: app.displayName,
+                isFavorite: library.isFavorite(app),
+                onOpen: { library.open(app) },
+                onToggleFavorite: { library.toggleFavorite(app) },
+                onReveal: { library.reveal(app) },
+                onCopyPath: { library.copyPath(app) },
+                onTrash: { onTrashRequest(app) }
+            )
+        }
         .onHover { hovered = $0 }
         .animation(reduceMotion ? nil : .easeInOut(duration: 0.15), value: hovered)
-        .animation(reduceMotion ? nil : .easeInOut(duration: 0.15), value: dropTargeted)
         .help(app.url.path)
-        .accessibilityHint("点按打开应用，右上角星标可收藏")
+        .accessibilityHint("点按打开应用，长按拖动可排序")
         .accessibilityIdentifier("apps.card.\(app.id)")
-    }
-
-    /// 右上角收藏星标：已收藏时常显品牌色实心星；未收藏时悬停才出现描边星。
-    private var favoriteButton: some View {
-        let favorited = library.isFavorite(app)
-        let visible = favorited || hovered
-        return Button {
-            library.toggleFavorite(app)
-        } label: {
-            PikaIcon(favorited ? AppIconName.favoriteFilled : AppIconName.favorite,
-                     size: 13,
-                     color: favorited ? .cc.primary : .cc.mutedForeground)
-                .frame(width: 22, height: 22)
-                .background {
-                    Circle().fill(Color.cc.muted.opacity(0.9))
-                }
-                .contentShape(Circle())
-        }
-        .buttonStyle(.plain)
-        .opacity(visible ? 1 : 0)
-        .allowsHitTesting(visible)
-        .help(favorited ? "从收藏中移除" : "添加到收藏")
-        .accessibilityLabel(favorited ? "从收藏中移除" : "添加到收藏")
     }
 }
 
@@ -334,9 +404,9 @@ private struct AppCard: View {
 private struct AppRow: View {
     let app: AppEntry
     let library: AppLibrary
+    let onDragStart: () -> Void
     let onTrashRequest: (AppEntry) -> Void
     @State private var hovered = false
-    @State private var dropTargeted = false
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
@@ -382,29 +452,29 @@ private struct AppRow: View {
                     .fill(hovered ? Color.cc.muted.opacity(0.55) : .clear)
                     .padding(.horizontal, 4)
             }
-            .overlay {
-                if dropTargeted {
-                    RoundedRectangle(cornerRadius: 10, style: .continuous)
-                        .strokeBorder(Color.cc.primary, lineWidth: 2)
-                        .padding(.horizontal, 4)
-                }
-            }
             .contentShape(Rectangle())
         }
         .buttonStyle(AppPressButtonStyle())
-        .onDrag { NSItemProvider(object: app.identityKey as NSString) }
-        .dropDestination(for: String.self) { items, _ in
-            guard let dragged = items.first, dragged != app.identityKey else { return false }
-            library.reorder(draggedID: dragged, before: app.identityKey)
-            return true
-        } isTargeted: { dropTargeted = $0 }
-        .contextMenu { AppContextActions(app: app, library: library, onTrashRequest: onTrashRequest) }
+        .onDrag {
+            onDragStart()
+            return NSItemProvider(object: app.identityKey as NSString)
+        }
+        .contextMenu {
+            AppContextActions(
+                title: app.displayName,
+                isFavorite: library.isFavorite(app),
+                onOpen: { library.open(app) },
+                onToggleFavorite: { library.toggleFavorite(app) },
+                onReveal: { library.reveal(app) },
+                onCopyPath: { library.copyPath(app) },
+                onTrash: { onTrashRequest(app) }
+            )
+        }
         .onHover { hovered = $0 }
         .animation(reduceMotion ? nil : .easeInOut(duration: 0.15), value: hovered)
-        .animation(reduceMotion ? nil : .easeInOut(duration: 0.15), value: dropTargeted)
         .help(app.url.path)
         .accessibilityLabel("\(app.displayName)，\(app.displaySize)")
-        .accessibilityHint("点按打开应用，拖到侧边栏「收藏」可收藏")
+        .accessibilityHint("点按打开应用，长按拖动可排序")
         .accessibilityIdentifier("apps.row.\(app.id)")
     }
 }
@@ -412,21 +482,66 @@ private struct AppRow: View {
 // MARK: - Shared context menu
 
 private struct AppContextActions: View {
-    let app: AppEntry
-    let library: AppLibrary
-    let onTrashRequest: (AppEntry) -> Void
+    let title: String
+    let isFavorite: Bool
+    let onOpen: () -> Void
+    let onToggleFavorite: () -> Void
+    let onReveal: () -> Void
+    let onCopyPath: () -> Void
+    let onTrash: () -> Void
 
     var body: some View {
-        Button("打开") { library.open(app) }
-        Button(library.isFavorite(app) ? "从收藏中移除" : "添加到收藏") {
-            library.toggleFavorite(app)
-        }
-        Button("在访达中显示") { library.reveal(app) }
-        Button("拷贝路径") { library.copyPath(app) }
+        Button("打开") { onOpen() }
+        Button(isFavorite ? "从收藏中移除" : "添加到收藏") { onToggleFavorite() }
+        Button("在访达中显示") { onReveal() }
+        Button("拷贝路径") { onCopyPath() }
         Divider()
-        Button("移到废纸篓…", role: .destructive) { onTrashRequest(app) }
+        Button("移到废纸篓…", role: .destructive) { onTrash() }
     }
 }
+
+// MARK: - Drop delegate
+
+/// 网格/列表容器的拖放代理：拖动过程中实时计算插入位置，
+/// 让其余应用实时让位；松手后执行重排。
+private struct GridDropDelegate: DropDelegate {
+    let coordinateSpace: String
+    let indexOfCardAt: (CGPoint) -> Int?
+    let onInsert: (Int?) -> Void
+    let onPerform: (Int) -> Bool
+    let onExit: () -> Void
+
+    func dropEntered(info: DropInfo) {}
+
+    func dropUpdated(info: DropInfo) -> DropProposal? {
+        onInsert(indexOfCardAt(info.location))
+        return DropProposal(operation: .move)
+    }
+
+    func dropExited(info: DropInfo) {
+        onExit()
+    }
+
+    func performDrop(info: DropInfo) -> Bool {
+        let index = indexOfCardAt(info.location)
+        guard let index else {
+            onExit()
+            return false
+        }
+        return onPerform(index)
+    }
+}
+
+// MARK: - Card frames preference
+
+private struct CardFramesKey: SwiftUI.PreferenceKey {
+    static var defaultValue: [String: CGRect] { [:] }
+    static func reduce(value: inout [String: CGRect], nextValue: () -> [String: CGRect]) {
+        value.merge(nextValue()) { _, new in new }
+    }
+}
+
+// MARK: - Press feedback style
 
 /// 按压时轻微缩小并降低不透明度，给卡片和行一致的按压反馈。
 struct AppPressButtonStyle: ButtonStyle {

@@ -190,35 +190,36 @@ final class AppLibrary {
         recomputeVisible()
     }
 
-    /// 拖拽重排：把 dragged 移到 target 之前。
+    /// 拖拽重排：把被拖应用移动到插入位置（其余应用让位后的空槽）。
     /// - 收藏分类：写回收藏顺序
     /// - 其他分类：写入手动排序，并自动把排序方式切到「手动」（否则重排会被覆盖、看起来无效）
-    func reorder(draggedID: String, before targetID: String) {
-        let sequence = visibleApps.map(\.identityKey)
-        guard let from = sequence.firstIndex(of: draggedID),
-              let to = sequence.firstIndex(of: targetID), from != to else { return }
-        var ordered = sequence
-        let dragged = ordered.remove(at: from)
-        let insertIndex = ordered.firstIndex(of: targetID) ?? ordered.count
-        ordered.insert(dragged, at: insertIndex)
+    @discardableResult
+    func reorder(draggedID: String, insertionIndex: Int) -> Bool {
+        var ids = visibleApps.filter { $0.id != draggedID }.map(\.identityKey)
+        guard !ids.isEmpty else { return false }
+        let index = min(max(insertionIndex, 0), ids.count)
+        ids.insert(draggedID, at: index)
 
         if category == .favorites {
-            var merged = ordered
-            merged += favoriteOrder.filter { !ordered.contains($0) }
+            var merged = ids
+            merged += favoriteOrder.filter { !ids.contains($0) }
             favoriteOrder = merged
             persistFavorites()
-        } else {
-            var merged = ordered
-            merged += customOrder.filter { !ordered.contains($0) }
-            merged += apps.map(\.identityKey).filter { !merged.contains($0) }
-            customOrder = merged
-            defaults.set(customOrder, forKey: PreferenceKey.appsCustomOrder)
-            if sortKey != .manual {
-                sortKey = .manual
-                return   // didSet 已触发重算
-            }
+            recomputeVisible()
+            return true
+        }
+
+        var merged = ids
+        merged += customOrder.filter { !ids.contains($0) }
+        merged += apps.map(\.identityKey).filter { !merged.contains($0) }
+        customOrder = merged
+        defaults.set(customOrder, forKey: PreferenceKey.appsCustomOrder)
+        if sortKey != .manual {
+            sortKey = .manual   // didSet 会重算可见列表
+            return true
         }
         recomputeVisible()
+        return true
     }
 
     private func persistFavorites() {
