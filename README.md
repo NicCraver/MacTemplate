@@ -1,4 +1,4 @@
-# MacTemplate
+# AppList
 
 macOS 15 SwiftUI 日常开发骨架。设计系统源码在本仓库 `Packages/ChunUI`：双栏窗口、菜单命令、设置、关于窗口、品牌色换肤。
 
@@ -15,12 +15,12 @@ pnpm run start
 ## 开新 App
 
 ```bash
-cp -R MacTemplate MyApp && cd MyApp
+cp -R AppList MyApp && cd MyApp
 ./Scripts/rename.sh MyApp com.you.myapp
 pnpm run start
 ```
 
-`rename.sh` 会把类型名、bundle id 和 UserDefaults 前缀 `macTemplate` 一起换成新名字。然后改 `AppSection`（`primary` + `destination`）和 `Features/` 里的页面。菜单、「前往」快捷键、菜单栏会跟 `AppSection.menuOrder` 走。
+`rename.sh` 会把类型名、bundle id 和 UserDefaults 前缀 `appList` 一起换成新名字。然后改 `AppSection`（`primary` + `destination`）和 `Features/` 里的页面。菜单、「前往」快捷键、菜单栏会跟 `AppSection.menuOrder` 走。
 
 视觉组件在 `Packages/ChunUI`。唯一远程 SPM 依赖是按钮质感库 [Pow](https://github.com/EmergeTools/Pow)。
 

@@ -1,4 +1,4 @@
-# MacTemplate Implementation Plan
+# AppList Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
@@ -15,13 +15,13 @@
 - 视觉：Color.cc / Font.cc / PikaIcon；唯一彩色为 `Color.cc.primary`
 - Mac 窗口用 SwiftUI Scene，不走 ChunUI UIKit AppHelper
 - 无沙盒、无公证、无 Sparkle、无 SwiftData
-- 设置键：`macTemplate.appearanceMode`、`macTemplate.brandColorHex`
+- 设置键：`appList.appearanceMode`、`appList.brandColorHex`
 
 ## Files
 
 - Create: `project.yml`, `.gitignore`, `README.md`, `AGENTS.md`
 - Create: `Scripts/rename.sh`
-- Create: `Sources/App/MacTemplateApp.swift`, `Sources/App/AppCommands.swift`, `Sources/App/AppInfo.swift`, `Sources/App/AppSession.swift`
+- Create: `Sources/App/AppListApp.swift`, `Sources/App/AppCommands.swift`, `Sources/App/AppInfo.swift`, `Sources/App/AppSession.swift`
 - Create: `Sources/Theme/AppearanceMode.swift`, `Sources/Theme/BrandColor.swift`, `Sources/Theme/AppTheme.swift`
 - Create: `Sources/Navigation/AppSection.swift`, `Sources/Navigation/SidebarView.swift`, `Sources/Navigation/RootSplitView.swift`
 - Create: `Sources/Features/Overview/OverviewPage.swift`

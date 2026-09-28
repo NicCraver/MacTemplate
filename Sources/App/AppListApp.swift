@@ -2,17 +2,20 @@ import ChunUI
 import SwiftUI
 
 @main
-struct MacTemplateApp: App {
+struct AppListApp: App {
     @State private var theme = AppTheme()
     @State private var session = AppSession()
+    @State private var library = AppLibrary()
 
     var body: some Scene {
         WindowGroup(id: "main") {
             RootSplitView()
                 .environment(theme)
                 .environment(session)
+                .environment(library)
                 .preferredColorScheme(theme.appearance.colorScheme)
                 .id(theme.revision)
+                .background(SnapshotWatcher())
         }
         .defaultSize(width: 1100, height: 740)
         .windowResizability(.contentMinSize)

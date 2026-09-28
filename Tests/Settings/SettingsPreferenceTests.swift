@@ -1,5 +1,5 @@
 import Testing
-@testable import MacTemplate
+@testable import AppList
 
 struct SettingsPreferenceTests {
     @Test
@@ -12,6 +12,6 @@ struct SettingsPreferenceTests {
         for key in keys {
             #expect(key.hasPrefix("\(PreferenceKey.prefix)."))
         }
-        #expect(PreferenceKey.prefix == "macTemplate")
+        #expect(PreferenceKey.prefix == "appList")
     }
 }

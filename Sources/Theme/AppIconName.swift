@@ -1,6 +1,7 @@
 import ChunUI
 
 enum AppIconName {
+    static let apps = PikaIcon.Name.folder
     static let overview = "grid-dashboard-bento"
     static let library = PikaIcon.Name.folder
     static let components = "diamond-component"

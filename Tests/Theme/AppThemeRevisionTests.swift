@@ -1,11 +1,11 @@
 import Foundation
 import Testing
-@testable import MacTemplate
+@testable import AppList
 
 struct AppThemeRevisionTests {
     @Test
     func initAppliesPaletteWithoutBumpingRevision() {
-        let defaults = makeSuite("MacTemplate.AppTheme.init")
+        let defaults = makeSuite("AppList.AppTheme.init")
         let palette = RecordingBrandPaletteApplier()
 
         let theme = AppTheme(defaults: defaults, palette: palette)
@@ -15,28 +15,28 @@ struct AppThemeRevisionTests {
         #expect(theme.brandHex == BrandColor.default.hex)
         #expect(palette.hexes == [BrandColor.default.hex])
 
-        defaults.removePersistentDomain(forName: "MacTemplate.AppTheme.init")
+        defaults.removePersistentDomain(forName: "AppList.AppTheme.init")
     }
 
     @Test
     func writingBrandBumpsRevisionAndReappliesPalette() {
-        let defaults = makeSuite("MacTemplate.AppTheme.revision")
+        let defaults = makeSuite("AppList.AppTheme.revision")
         let palette = RecordingBrandPaletteApplier()
         let theme = AppTheme(defaults: defaults, palette: palette)
 
         theme.brand = BrandColor.presets[1]
 
-        #expect(theme.brandHex == "007aff")
+        #expect(theme.brandHex == BrandColor.presets[1].hex)
         #expect(theme.revision == 1)
-        #expect(palette.hexes == [BrandColor.default.hex, "007aff"])
-        #expect(defaults.string(forKey: PreferenceKey.brandColorHex) == "007aff")
+        #expect(palette.hexes == [BrandColor.default.hex, BrandColor.presets[1].hex])
+        #expect(defaults.string(forKey: PreferenceKey.brandColorHex) == BrandColor.presets[1].hex)
 
-        defaults.removePersistentDomain(forName: "MacTemplate.AppTheme.revision")
+        defaults.removePersistentDomain(forName: "AppList.AppTheme.revision")
     }
 
     @Test
     func appearanceChangeDoesNotBumpRevision() {
-        let defaults = makeSuite("MacTemplate.AppTheme.appearance")
+        let defaults = makeSuite("AppList.AppTheme.appearance")
         let palette = RecordingBrandPaletteApplier()
         let theme = AppTheme(defaults: defaults, palette: palette)
         let applied = palette.hexes.count
@@ -47,7 +47,7 @@ struct AppThemeRevisionTests {
         #expect(palette.hexes.count == applied)
         #expect(defaults.string(forKey: PreferenceKey.appearanceMode) == "dark")
 
-        defaults.removePersistentDomain(forName: "MacTemplate.AppTheme.appearance")
+        defaults.removePersistentDomain(forName: "AppList.AppTheme.appearance")
     }
 
     private func makeSuite(_ name: String) -> UserDefaults {

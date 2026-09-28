@@ -1,4 +1,4 @@
-name: MacTemplate
+name: AppList
 options:
   bundleIdPrefix: com.chunui
   createIntermediateGroups: true
@@ -17,16 +17,16 @@ settings:
     CODE_SIGN_IDENTITY: "-"
     DEVELOPMENT_TEAM: ""
 schemes:
-  MacTemplate:
+  AppList:
     build:
       targets:
-        MacTemplate: all
+        AppList: all
     test:
       targets:
-        - MacTemplateTests
-        - MacTemplateUITests
+        - AppListTests
+        - AppListUITests
 targets:
-  MacTemplate:
+  AppList:
     type: application
     platform: macOS
     sources:
@@ -38,11 +38,11 @@ targets:
     settings:
       base:
         GENERATE_INFOPLIST_FILE: YES
-        PRODUCT_BUNDLE_IDENTIFIER: com.chunui.mac-template
-        PRODUCT_NAME: MacTemplate
-        INFOPLIST_KEY_CFBundleDisplayName: MacTemplate
+        PRODUCT_BUNDLE_IDENTIFIER: com.nic.applist
+        PRODUCT_NAME: AppList
+        INFOPLIST_KEY_CFBundleDisplayName: AppList
         INFOPLIST_KEY_LSApplicationCategoryType: public.app-category.developer-tools
-        INFOPLIST_KEY_NSHumanReadableCopyright: Copyright © MacTemplate
+        INFOPLIST_KEY_NSHumanReadableCopyright: Copyright © AppList
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         MARKETING_VERSION: 1.0.0
         CURRENT_PROJECT_VERSION: 1
@@ -52,29 +52,29 @@ targets:
           ENABLE_TESTABILITY: YES
         Release:
           ENABLE_TESTABILITY: NO
-  MacTemplateTests:
+  AppListTests:
     type: bundle.unit-test
     platform: macOS
     sources:
       - path: Tests
     dependencies:
-      - target: MacTemplate
+      - target: AppList
     settings:
       base:
         GENERATE_INFOPLIST_FILE: YES
-        PRODUCT_BUNDLE_IDENTIFIER: com.chunui.mac-template.tests
-        TEST_HOST: "$(BUILT_PRODUCTS_DIR)/MacTemplate.app/Contents/MacOS/MacTemplate"
+        PRODUCT_BUNDLE_IDENTIFIER: com.nic.applist.tests
+        TEST_HOST: "$(BUILT_PRODUCTS_DIR)/AppList.app/Contents/MacOS/AppList"
         BUNDLE_LOADER: "$(TEST_HOST)"
-  MacTemplateUITests:
+  AppListUITests:
     type: bundle.ui-testing
     platform: macOS
     sources:
       - path: UITests
     dependencies:
-      - target: MacTemplate
+      - target: AppList
     settings:
       base:
         GENERATE_INFOPLIST_FILE: YES
-        PRODUCT_BUNDLE_IDENTIFIER: com.chunui.mac-template.uitests
-        TEST_TARGET_NAME: MacTemplate
+        PRODUCT_BUNDLE_IDENTIFIER: com.nic.applist.uitests
+        TEST_TARGET_NAME: AppList
         SWIFT_DEFAULT_ACTOR_ISOLATION: nonisolated

@@ -1,5 +1,5 @@
 import Testing
-@testable import MacTemplate
+@testable import AppList
 
 struct AppWindowsTests {
     @Test

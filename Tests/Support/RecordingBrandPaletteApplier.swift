@@ -1,4 +1,4 @@
-@testable import MacTemplate
+@testable import AppList
 
 final class RecordingBrandPaletteApplier: BrandPaletteApplying {
     var hexes: [String] = []

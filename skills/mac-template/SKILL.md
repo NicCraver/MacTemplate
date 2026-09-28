@@ -3,7 +3,7 @@ name: mac-template
 description: Native macOS SwiftUI app template rules — WindowGroup, Settings scene, commands, AppTheme, ChunUI on Mac. Use when editing this repo, adding sidebar sections, windows, menus, or settings.
 ---
 
-# MacTemplate
+# AppList
 
 独立 macOS App 骨架。视觉组件源码在本仓库 `Packages/ChunUI`，SwiftUI Scene 管窗口。
 
@@ -18,7 +18,7 @@ description: Native macOS SwiftUI app template rules — WindowGroup, Settings s
 ## 状态
 
 - `AppSession.section`：侧栏与「前往」菜单的单一来源；再点当前分区会 bump `navigationEpoch`（资料库回到根）
-- `AppTheme`：键前缀 `macTemplate.*`（`PreferenceKey`）；`rename.sh` 会一起换掉
+- `AppTheme`：键前缀 `appList.*`（`PreferenceKey`）；`rename.sh` 会一起换掉
 - 外观改 `preferredColorScheme`；品牌色走 `BrandPaletteApplying`，必须 bump `revision`
 
 ## 不要做

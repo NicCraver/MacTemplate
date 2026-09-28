@@ -41,9 +41,9 @@ replace_in_tree() {
     -o -type f \( -name '*.swift' -o -name '*.yml' -o -name '*.yaml' -o -name '*.md' -o -name '*.sh' -o -name '*.json' \) -print)
 }
 
-replace_in_tree "macTemplate" "$PREFIX"
-replace_in_tree "com.chunui.mac-template" "$BUNDLE"
-replace_in_tree "MacTemplate" "$NAME"
+replace_in_tree "appList" "$PREFIX"
+replace_in_tree "com.nic.applist" "$BUNDLE"
+replace_in_tree "AppList" "$NAME"
 
 if command -v xcodegen >/dev/null 2>&1; then
   xcodegen generate

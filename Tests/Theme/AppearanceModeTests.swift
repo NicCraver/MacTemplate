@@ -1,6 +1,6 @@
 import SwiftUI
 import Testing
-@testable import MacTemplate
+@testable import AppList
 
 struct AppearanceModeTests {
     @Test

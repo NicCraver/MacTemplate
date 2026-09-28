@@ -1,11 +1,11 @@
 import Foundation
 import Testing
-@testable import MacTemplate
+@testable import AppList
 
 struct AppSessionTests {
     @Test
     func statusBarDefaultsOn() {
-        let suite = "MacTemplate.AppSession.statusBar"
+        let suite = "AppList.AppSession.statusBar"
         guard let defaults = UserDefaults(suiteName: suite) else {
             Issue.record("failed to create defaults suite")
             return
@@ -24,7 +24,7 @@ struct AppSessionTests {
 
     @Test
     func sidebarStartsExpanded() {
-        let suite = "MacTemplate.AppSession.sidebar"
+        let suite = "AppList.AppSession.sidebar"
         guard let defaults = UserDefaults(suiteName: suite) else {
             Issue.record("failed to create defaults suite")
             return

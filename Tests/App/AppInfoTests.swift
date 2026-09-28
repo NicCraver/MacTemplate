@@ -1,13 +1,13 @@
 import Testing
-@testable import MacTemplate
+@testable import AppList
 
 struct AppInfoTests {
     @Test
     func pickDisplayNamePrefersDisplayThenBundleThenFallback() {
         #expect(AppInfo.pickDisplayName("Notes", bundleName: "Ignore") == "Notes")
         #expect(AppInfo.pickDisplayName("  ", bundleName: "Bundle") == "Bundle")
-        #expect(AppInfo.pickDisplayName(nil, bundleName: nil) == "MacTemplate")
-        #expect(AppInfo.pickDisplayName(nil, bundleName: "") == "MacTemplate")
+        #expect(AppInfo.pickDisplayName(nil, bundleName: nil) == "AppList")
+        #expect(AppInfo.pickDisplayName(nil, bundleName: "") == "AppList")
     }
 
     @Test
@@ -20,8 +20,8 @@ struct AppInfoTests {
     @Test
     func pickCopyrightFallsBack() {
         #expect(AppInfo.pickCopyright("Copyright © Notes") == "Copyright © Notes")
-        #expect(AppInfo.pickCopyright("  ") == "Copyright © MacTemplate")
-        #expect(AppInfo.pickCopyright(nil) == "Copyright © MacTemplate")
+        #expect(AppInfo.pickCopyright("  ") == "Copyright © AppList")
+        #expect(AppInfo.pickCopyright(nil) == "Copyright © AppList")
     }
 
     @Test

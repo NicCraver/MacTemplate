@@ -1,11 +1,11 @@
 import Foundation
 import Testing
-@testable import MacTemplate
+@testable import AppList
 
 struct AppThemeTests {
     @Test
     func unknownStoredValuesFallBack() {
-        let suite = "MacTemplate.AppTheme.fallback"
+        let suite = "AppList.AppTheme.fallback"
         guard let defaults = UserDefaults(suiteName: suite) else {
             Issue.record("failed to create defaults suite")
             return
@@ -23,7 +23,7 @@ struct AppThemeTests {
 
     @Test
     func writingBrandUpdatesHex() {
-        let suite = "MacTemplate.AppTheme.write"
+        let suite = "AppList.AppTheme.write"
         guard let defaults = UserDefaults(suiteName: suite) else {
             Issue.record("failed to create defaults suite")
             return
@@ -32,8 +32,8 @@ struct AppThemeTests {
 
         let theme = AppTheme(defaults: defaults, palette: RecordingBrandPaletteApplier())
         theme.brand = BrandColor.presets[1]
-        #expect(theme.brandHex == "007aff")
-        #expect(defaults.string(forKey: AppTheme.brandKey) == "007aff")
+        #expect(theme.brandHex == BrandColor.presets[1].hex)
+        #expect(defaults.string(forKey: AppTheme.brandKey) == BrandColor.presets[1].hex)
 
         defaults.removePersistentDomain(forName: suite)
     }

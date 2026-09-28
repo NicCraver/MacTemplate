@@ -1,4 +1,4 @@
-# MacTemplate
+# AppList
 
 macOS 15 SwiftUI 模板。视觉组件源码在 `Packages/ChunUI`，窗口用原生 Scene。
 

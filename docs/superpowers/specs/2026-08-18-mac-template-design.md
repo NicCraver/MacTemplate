@@ -1,4 +1,4 @@
-# MacTemplate 日常开发骨架
+# AppList 日常开发骨架
 
 日期：2026-08-18  
 状态：已批准（架构、组件；数据流/错误处理/测试由实现者按本节落地）
@@ -9,7 +9,7 @@
 
 ## 架构
 
-`MacTemplateApp` 挂三个 Scene：
+`AppListApp` 挂三个 Scene：
 
 - `WindowGroup`：主窗口，`NavigationSplitView` 侧栏 + detail
 - `Settings`：系统设置窗口（⌘,）
@@ -29,7 +29,7 @@
 2. 外观：`preferredColorScheme` 绑定 `AppearanceMode`（system/light/dark），不重建根视图。
 3. 品牌色：写入 `UserDefaults` 后 `ChunUI.configure`，并增加 `theme.revision`，根视图 `.id(revision)` 重建（ChunUI 换肤必须重建）。
 4. 导航：`AppSession.section` 是侧栏与「前往」菜单的单一来源。资料库列表为内存占位，搜索为纯函数过滤。
-5. 无网络、无 SwiftData。设置键：`macTemplate.appearanceMode`、`macTemplate.brandColorHex`。
+5. 无网络、无 SwiftData。设置键：`appList.appearanceMode`、`appList.brandColorHex`。
 
 ## 错误处理
 

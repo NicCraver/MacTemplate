@@ -6,7 +6,7 @@ import SwiftUI
 final class AppSession {
     static var statusBarKey: String { PreferenceKey.showStatusBar }
 
-    var section: AppSection = .overview
+    var section: AppSection = .apps
     var navigationEpoch: Int = 0
 
     /// 存 SwiftUI 原样的列可见性。两列布局里 NavigationSplitView 写回的是

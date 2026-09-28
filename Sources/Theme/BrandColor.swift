@@ -6,10 +6,10 @@ struct BrandColor: Identifiable, Equatable, Hashable {
     let hex: String
 
     static let presets: [BrandColor] = [
-        BrandColor(id: "pink", name: "霓虹粉", hex: "ff00c8"),
-        BrandColor(id: "blue", name: "系统蓝", hex: "007aff"),
-        BrandColor(id: "orange", name: "琥珀", hex: "ff6b00"),
-        BrandColor(id: "teal", name: "碧玺", hex: "00a3a1"),
+        BrandColor(id: "azure", name: "湛蓝", hex: "3E7EFF"),
+        BrandColor(id: "blue", name: "系统蓝", hex: "007AFF"),
+        BrandColor(id: "orange", name: "琥珀", hex: "FF6B00"),
+        BrandColor(id: "teal", name: "碧玺", hex: "00A3A1"),
     ]
 
     static let `default`: BrandColor = presets[0]

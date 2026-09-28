@@ -19,7 +19,7 @@ enum AppInfo {
     static func pickDisplayName(_ display: String?, bundleName: String?) -> String {
         if let display = nonempty(display) { return display }
         if let bundleName = nonempty(bundleName) { return bundleName }
-        return "MacTemplate"
+        return "AppList"
     }
 
     static func pickVersion(_ version: String?) -> String {
@@ -27,7 +27,7 @@ enum AppInfo {
     }
 
     static func pickCopyright(_ copyright: String?) -> String {
-        nonempty(copyright) ?? "Copyright © MacTemplate"
+        nonempty(copyright) ?? "Copyright © AppList"
     }
 
     private static func nonempty(_ value: String?) -> String? {
