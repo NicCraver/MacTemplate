@@ -8,12 +8,20 @@ struct RootSplitView: View {
     var body: some View {
         @Bindable var session = session
         NavigationSplitView(columnVisibility: $session.sidebarVisibility) {
-            SidebarView()
-                .navigationSplitViewColumnWidth(
-                    min: 180,
-                    ideal: MacChrome.sidebarWidth,
-                    max: 280
-                )
+            SidebarView {
+                if reduceMotion {
+                    session.sidebarExpanded.toggle()
+                } else {
+                    withAnimation(MacChrome.sidebarAnimation) {
+                        session.sidebarExpanded.toggle()
+                    }
+                }
+            }
+            .navigationSplitViewColumnWidth(
+                min: 180,
+                ideal: MacChrome.sidebarWidth,
+                max: 280
+            )
         } detail: {
             ZStack(alignment: .topLeading) {
                 session.section.destination

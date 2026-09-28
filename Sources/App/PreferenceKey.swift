@@ -11,4 +11,6 @@ enum PreferenceKey {
     static var appsCategory: String { "\(prefix).apps.category" }
     static var appsIncludeSystem: String { "\(prefix).apps.includeSystemApps" }
     static var appsLaunchCounts: String { "\(prefix).apps.launchCounts" }
+    static var appsFavorites: String { "\(prefix).apps.favorites" }
+    static var appsFavoriteOrder: String { "\(prefix).apps.favoriteOrder" }
 }

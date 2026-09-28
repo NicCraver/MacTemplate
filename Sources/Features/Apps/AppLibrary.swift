@@ -9,7 +9,7 @@ final class AppLibrary {
     enum ViewMode: Int { case grid, list }
     enum SortKey: Int { case name, date, size, frequent }
     enum Category: Int, CaseIterable {
-        case all, mostUsed, recentlyUpdated, homeFolder, systemFolder
+        case all, favorites, mostUsed, recentlyUpdated, homeFolder, systemFolder
 
         static let cutoffInterval: TimeInterval = 30 * 86400
         static let mostUsedMinimum = 3
@@ -17,10 +17,22 @@ final class AppLibrary {
         var title: String {
             switch self {
             case .all: return "全部应用"
-            case .mostUsed: return "最常用"
+            case .favorites: return "收藏"
+            case .mostUsed: return "常用"
             case .recentlyUpdated: return "最近更新"
             case .homeFolder: return "~/Applications"
             case .systemFolder: return "/Applications"
+            }
+        }
+
+        var iconName: String {
+            switch self {
+            case .all: return AppIconName.appsGrid
+            case .favorites: return AppIconName.favorite
+            case .mostUsed: return AppIconName.mostUsed
+            case .recentlyUpdated: return AppIconName.recentlyUpdated
+            case .homeFolder: return AppIconName.homeFolder
+            case .systemFolder: return AppIconName.systemFolder
             }
         }
     }
@@ -56,6 +68,8 @@ final class AppLibrary {
     }
 
     private(set) var launchCounts: [String: Int]
+    private(set) var favoriteIDs: Set<String>
+    private(set) var favoriteOrder: [String]
 
     private var hasLoaded = false
     private var scanGeneration = 0
@@ -70,6 +84,8 @@ final class AppLibrary {
         category = Category(rawValue: defaults.integer(forKey: PreferenceKey.appsCategory)) ?? .all
         includeSystemApps = defaults.object(forKey: PreferenceKey.appsIncludeSystem) as? Bool ?? false
         launchCounts = defaults.dictionary(forKey: PreferenceKey.appsLaunchCounts) as? [String: Int] ?? [:]
+        favoriteIDs = Set(defaults.stringArray(forKey: PreferenceKey.appsFavorites) ?? [])
+        favoriteOrder = defaults.stringArray(forKey: PreferenceKey.appsFavoriteOrder) ?? []
         recomputeVisible()
     }
 
@@ -84,18 +100,28 @@ final class AppLibrary {
                     || ($0.bundleID?.lowercased().contains(query) ?? false)
             }
         }
-        switch sortKey {
-        case .name:
-            apps.sort { $0.name.localizedStandardCompare($1.name) == .orderedAscending }
-        case .date:
-            apps.sort { $0.modified > $1.modified }
-        case .size:
-            apps.sort { max($0.sizeBytes, 0) > max($1.sizeBytes, 0) }
-        case .frequent:
+        if category == .favorites {
+            // 收藏视图按用户拖拽定义的顺序展示，不受排序菜单影响。
             apps.sort {
-                let lhs = launchCount(for: $0), rhs = launchCount(for: $1)
-                if lhs != rhs { return lhs > rhs }
+                let ai = favoriteOrder.firstIndex(of: $0.identityKey) ?? Int.max
+                let bi = favoriteOrder.firstIndex(of: $1.identityKey) ?? Int.max
+                if ai != bi { return ai < bi }
                 return $0.name.localizedStandardCompare($1.name) == .orderedAscending
+            }
+        } else {
+            switch sortKey {
+            case .name:
+                apps.sort { $0.name.localizedStandardCompare($1.name) == .orderedAscending }
+            case .date:
+                apps.sort { $0.modified > $1.modified }
+            case .size:
+                apps.sort { max($0.sizeBytes, 0) > max($1.sizeBytes, 0) }
+            case .frequent:
+                apps.sort {
+                    let lhs = launchCount(for: $0), rhs = launchCount(for: $1)
+                    if lhs != rhs { return lhs > rhs }
+                    return $0.name.localizedStandardCompare($1.name) == .orderedAscending
+                }
             }
         }
         visibleApps = apps
@@ -109,6 +135,8 @@ final class AppLibrary {
         switch category {
         case .all:
             return true
+        case .favorites:
+            return favoriteIDs.contains(app.identityKey)
         case .mostUsed:
             return launchCount(for: app) >= Category.mostUsedMinimum
         case .recentlyUpdated:
@@ -120,6 +148,56 @@ final class AppLibrary {
             let system = AppScanner.directories(includeSystemApps: false)[1]
             return app.url.path.hasPrefix(system.path)
         }
+    }
+
+    func isFavorite(_ app: AppEntry) -> Bool {
+        favoriteIDs.contains(app.identityKey)
+    }
+
+    func toggleFavorite(_ app: AppEntry) {
+        let key = app.identityKey
+        if favoriteIDs.contains(key) {
+            favoriteIDs.remove(key)
+            favoriteOrder.removeAll { $0 == key }
+        } else {
+            favoriteIDs.insert(key)
+            favoriteOrder.append(key)
+        }
+        persistFavorites()
+        recomputeVisible()
+    }
+
+    /// 把应用加入收藏（拖到侧边栏「收藏」时调用）。
+    func addFavorite(identityKey: String) {
+        favoriteIDs.insert(identityKey)
+        if !favoriteOrder.contains(identityKey) {
+            favoriteOrder.append(identityKey)
+        }
+        persistFavorites()
+        recomputeVisible()
+    }
+
+    /// 收藏视图内拖拽排序：把 dragged 移到 target 之前。
+    func moveFavorite(_ draggedID: String, before targetID: String) {
+        guard draggedID != targetID else { return }
+        favoriteIDs.insert(draggedID)
+        favoriteIDs.insert(targetID)
+
+        var newOrder: [String] = []
+        for id in favoriteOrder where id != draggedID {
+            if id == targetID { newOrder.append(draggedID) }
+            newOrder.append(id)
+        }
+        if !newOrder.contains(draggedID) { newOrder.append(draggedID) }
+        favoriteOrder = newOrder
+
+        persistFavorites()
+        recomputeVisible()
+    }
+
+    private func persistFavorites() {
+        defaults.set(Array(favoriteIDs), forKey: PreferenceKey.appsFavorites)
+        defaults.set(favoriteOrder, forKey: PreferenceKey.appsFavoriteOrder)
     }
 
     func launchCount(for app: AppEntry) -> Int {

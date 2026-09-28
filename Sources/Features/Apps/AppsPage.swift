@@ -244,11 +244,13 @@ struct AppsPage: View {
 // MARK: - Grid card
 
 /// 独立视图：悬停状态本地化，滚动/悬停只重渲染当前卡片，不牵动整页。
+/// 收藏视图内可将卡片拖到另一张卡上重新排序；任何分类下拖拽即可发起收藏。
 private struct AppCard: View {
     let app: AppEntry
     let library: AppLibrary
     let onTrashRequest: (AppEntry) -> Void
     @State private var hovered = false
+    @State private var dropTargeted = false
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
@@ -259,6 +261,12 @@ private struct AppCard: View {
                 Image(nsImage: app.icon)
                     .resizable()
                     .frame(width: 64, height: 64)
+                    .overlay(alignment: .topTrailing) {
+                        if library.isFavorite(app) {
+                            PikaIcon(AppIconName.favoriteFilled, size: 14, color: .cc.primary)
+                                .offset(x: 5, y: -3)
+                        }
+                    }
                 Text(app.displayName)
                     .ccText(font: .cc.sm, color: .cc.foreground)
                     .lineLimit(2)
@@ -275,14 +283,28 @@ private struct AppCard: View {
                 RoundedRectangle(cornerRadius: 12, style: .continuous)
                     .fill(hovered ? Color.cc.muted.opacity(0.55) : .clear)
             }
+            .overlay {
+                if dropTargeted {
+                    RoundedRectangle(cornerRadius: 12, style: .continuous)
+                        .strokeBorder(Color.cc.primary, lineWidth: 2)
+                }
+            }
             .contentShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
         }
         .buttonStyle(AppPressButtonStyle())
+        .onDrag { NSItemProvider(object: app.identityKey as NSString) }
+        .dropDestination(for: String.self) { items, _ in
+            guard library.category == .favorites,
+                  let dragged = items.first, dragged != app.identityKey else { return false }
+            library.moveFavorite(dragged, before: app.identityKey)
+            return true
+        } isTargeted: { dropTargeted = $0 }
         .contextMenu { AppContextActions(app: app, library: library, onTrashRequest: onTrashRequest) }
         .onHover { hovered = $0 }
         .animation(reduceMotion ? nil : .easeInOut(duration: 0.15), value: hovered)
+        .animation(reduceMotion ? nil : .easeInOut(duration: 0.15), value: dropTargeted)
         .help(app.url.path)
-        .accessibilityHint("点按打开应用")
+        .accessibilityHint("点按打开应用，拖到侧边栏「收藏」可收藏")
         .accessibilityIdentifier("apps.card.\(app.id)")
     }
 }
@@ -294,6 +316,7 @@ private struct AppRow: View {
     let library: AppLibrary
     let onTrashRequest: (AppEntry) -> Void
     @State private var hovered = false
+    @State private var dropTargeted = false
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
@@ -304,6 +327,12 @@ private struct AppRow: View {
                 Image(nsImage: app.icon)
                     .resizable()
                     .frame(width: 32, height: 32)
+                    .overlay(alignment: .topTrailing) {
+                        if library.isFavorite(app) {
+                            PikaIcon(AppIconName.favoriteFilled, size: 10, color: .cc.primary)
+                                .offset(x: 4, y: -2)
+                        }
+                    }
 
                 VStack(alignment: .leading, spacing: 3) {
                     Text(app.displayName)
@@ -333,15 +362,30 @@ private struct AppRow: View {
                     .fill(hovered ? Color.cc.muted.opacity(0.55) : .clear)
                     .padding(.horizontal, 4)
             }
+            .overlay {
+                if dropTargeted {
+                    RoundedRectangle(cornerRadius: 10, style: .continuous)
+                        .strokeBorder(Color.cc.primary, lineWidth: 2)
+                        .padding(.horizontal, 4)
+                }
+            }
             .contentShape(Rectangle())
         }
         .buttonStyle(AppPressButtonStyle())
+        .onDrag { NSItemProvider(object: app.identityKey as NSString) }
+        .dropDestination(for: String.self) { items, _ in
+            guard library.category == .favorites,
+                  let dragged = items.first, dragged != app.identityKey else { return false }
+            library.moveFavorite(dragged, before: app.identityKey)
+            return true
+        } isTargeted: { dropTargeted = $0 }
         .contextMenu { AppContextActions(app: app, library: library, onTrashRequest: onTrashRequest) }
         .onHover { hovered = $0 }
         .animation(reduceMotion ? nil : .easeInOut(duration: 0.15), value: hovered)
+        .animation(reduceMotion ? nil : .easeInOut(duration: 0.15), value: dropTargeted)
         .help(app.url.path)
         .accessibilityLabel("\(app.displayName)，\(app.displaySize)")
-        .accessibilityHint("点按打开应用")
+        .accessibilityHint("点按打开应用，拖到侧边栏「收藏」可收藏")
         .accessibilityIdentifier("apps.row.\(app.id)")
     }
 }
@@ -355,6 +399,9 @@ private struct AppContextActions: View {
 
     var body: some View {
         Button("打开") { library.open(app) }
+        Button(library.isFavorite(app) ? "从收藏中移除" : "添加到收藏") {
+            library.toggleFavorite(app)
+        }
         Button("在访达中显示") { library.reveal(app) }
         Button("拷贝路径") { library.copyPath(app) }
         Divider()
