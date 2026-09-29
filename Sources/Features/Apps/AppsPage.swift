@@ -1,7 +1,5 @@
 import ChunUI
 import SwiftUI
-import SwiftUIReorderableForEach
-import UniformTypeIdentifiers
 
 struct AppsPage: View {
     @Environment(AppLibrary.self) private var library
@@ -10,12 +8,16 @@ struct AppsPage: View {
     @State private var pendingTrash: AppEntry?
     @FocusState private var searchFocused: Bool
 
-    private var orderedBinding: Binding<[AppEntry]> {
-        Binding(
-            get: { library.visibleApps },
-            set: { library.applyVisibleOrder($0) }
-        )
-    }
+    // 拖拽排序状态（网格 appsGridSpace / 列表 appsListSpace 两个命名空间通用）
+    @State private var draggingID: String?
+    @State private var dragStartPoint: CGPoint = .zero
+    @State private var dragStartCenter: CGPoint?
+    @State private var dragCurrentPoint: CGPoint = .zero
+    @State private var insertionIndex: Int?
+    @State private var cardFrames: [String: CGRect] = [:]
+
+    private static let gridSpace = "appsGridSpace"
+    private static let listSpace = "appsListSpace"
 
     var body: some View {
         MacPageScaffold(
@@ -186,6 +188,76 @@ struct AppsPage: View {
         .accessibilityLabel("分类筛选")
     }
 
+    // MARK: - Drag reorder
+
+    /// 拖拽期间的计算布局：被拖卡片移到插入点，其余卡片让位（带弹簧动画）。
+    private var arrangedApps: [AppEntry] {
+        var apps = library.visibleApps
+        if let draggingID, let insertionIndex,
+           let from = apps.firstIndex(where: { $0.id == draggingID }) {
+            let item = apps.remove(at: from)
+            apps.insert(item, at: min(insertionIndex, apps.count))
+        }
+        return apps
+    }
+
+    /// 指针位置对应的插入位置：命中哪张未拖拽的卡片，就插到它前面。
+    private func insertionIndexAt(_ point: CGPoint) -> Int? {
+        let ids = arrangedApps.map(\.id)
+        for (index, id) in ids.enumerated() where id != draggingID {
+            if let frame = cardFrames[id], frame.contains(point) {
+                return index
+            }
+        }
+        return nil
+    }
+
+    /// 被拖卡片的位移：手指位移 − 它当前所在槽位的位移补偿，保证始终跟手。
+    private func dragOffset(for app: AppEntry) -> CGSize {
+        guard app.id == draggingID,
+              let startCenter = dragStartCenter,
+              let frame = cardFrames[app.id] else { return .zero }
+        return CGSize(
+            width: startCenter.x + (dragCurrentPoint.x - dragStartPoint.x) - frame.midX,
+            height: startCenter.y + (dragCurrentPoint.y - dragStartPoint.y) - frame.midY
+        )
+    }
+
+    private func dragChanged(app: AppEntry, at point: CGPoint) {
+        if draggingID == nil {
+            draggingID = app.id
+            dragStartPoint = point
+            dragStartCenter = cardFrames[app.id].map { CGPoint(x: $0.midX, y: $0.midY) }
+            insertionIndex = library.visibleApps.firstIndex(where: { $0.id == app.id })
+        }
+        dragCurrentPoint = point
+
+        if let index = insertionIndexAt(point), index != insertionIndex {
+            withAnimation(reduceMotion ? nil : .spring(response: 0.3, dampingFraction: 0.85)) {
+                insertionIndex = index
+            }
+        }
+    }
+
+    private func dragEnded(at point: CGPoint) {
+        guard draggingID != nil else { return }
+        // 此刻 arrangedApps 已是最终顺序，直接持久化。
+        library.applyVisibleOrder(arrangedApps)
+
+        let reset = {
+            draggingID = nil
+            dragStartPoint = .zero
+            dragStartCenter = nil
+            dragCurrentPoint = .zero
+            insertionIndex = nil
+        }
+        if reduceMotion {
+            reset()
+        } else {
+            withAnimation(.easeOut(duration: 0.2)) { reset() }
+        }
+    }
+
     // MARK: - Content
 
     @ViewBuilder
@@ -227,40 +299,60 @@ struct AppsPage: View {
         return "换个分类看看，或在「分类」菜单里开启「显示系统应用」"
     }
 
-    /// 拖拽排序始终可用；落下的顺序由 applyVisibleOrder 持久化。
     private var gridView: some View {
         LazyVGrid(
             columns: [GridItem(.adaptive(minimum: 148), spacing: 14)],
             spacing: 14
         ) {
-            ReorderableForEach(orderedBinding, allowReordering: .constant(true)) { app, isDragged in
+            ForEach(arrangedApps) { app in
                 AppCard(
                     app: app,
-                    isDragged: isDragged,
+                    isDragged: app.id == draggingID,
+                    dragOffset: dragOffset(for: app),
                     isFavorite: library.isFavorite(app),
                     onOpen: { library.open(app) },
                     onToggleFavorite: { library.toggleFavorite(app) },
+                    onDragChanged: { dragChanged(app: app, at: $0) },
+                    onDragEnded: { dragEnded(at: $0) },
                     onTrash: { pendingTrash = app }
                 )
+                .background(cardFrameReader(id: app.id, space: Self.gridSpace))
             }
         }
+        .coordinateSpace(name: Self.gridSpace)
         .accessibilityIdentifier("apps.grid")
     }
 
     private var listView: some View {
         CCAppleCard(radius: 16) {
-            ReorderableForEach(orderedBinding, allowReordering: .constant(true)) { app, isDragged in
-                AppRow(
-                    app: app,
-                    isDragged: isDragged,
-                    isFavorite: library.isFavorite(app),
-                    onOpen: { library.open(app) },
-                    onToggleFavorite: { library.toggleFavorite(app) },
-                    onTrash: { pendingTrash = app }
-                )
+            LazyVStack(spacing: 0) {
+                ForEach(arrangedApps) { app in
+                    AppRow(
+                        app: app,
+                        isDragged: app.id == draggingID,
+                        dragOffset: dragOffset(for: app),
+                        isFavorite: library.isFavorite(app),
+                        onOpen: { library.open(app) },
+                        onToggleFavorite: { library.toggleFavorite(app) },
+                        onDragChanged: { dragChanged(app: app, at: $0) },
+                        onDragEnded: { dragEnded(at: $0) },
+                        onTrash: { pendingTrash = app }
+                    )
+                    .background(cardFrameReader(id: app.id, space: Self.listSpace))
+                }
             }
         }
+        .coordinateSpace(name: Self.listSpace)
         .accessibilityIdentifier("apps.list")
+    }
+
+    private func cardFrameReader(id: String, space: String) -> some View {
+        GeometryReader { geo in
+            Color.clear.preference(
+                key: CardFramesKey.self,
+                value: [id: geo.frame(in: .named(space))]
+            )
+        }
     }
 }
 
@@ -268,11 +360,16 @@ struct AppsPage: View {
 
 /// 独立视图：悬停状态本地化，滚动/悬停只重渲染当前卡片，不牵动整页。
 private struct AppCard: View {
+    static let gridSpace = "appsGridSpace"
+
     let app: AppEntry
     let isDragged: Bool
+    let dragOffset: CGSize
     let isFavorite: Bool
     let onOpen: () -> Void
     let onToggleFavorite: () -> Void
+    let onDragChanged: (CGPoint) -> Void
+    let onDragEnded: (CGPoint) -> Void
     let onTrash: () -> Void
     @State private var hovered = false
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
@@ -307,12 +404,6 @@ private struct AppCard: View {
                 RoundedRectangle(cornerRadius: 12, style: .continuous)
                     .fill(backgroundColor)
             }
-            .overlay {
-                if isDragged {
-                    RoundedRectangle(cornerRadius: 12, style: .continuous)
-                        .fill(Color.cc.background.opacity(0.6))
-                }
-            }
             .contentShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
         }
         .buttonStyle(AppPressButtonStyle())
@@ -326,14 +417,28 @@ private struct AppCard: View {
                 onOpen: onOpen,
                 onToggleFavorite: onToggleFavorite,
                 onReveal: { NSWorkspace.shared.activateFileViewerSelecting([app.url]) },
-                onCopyPath: { NSPasteboard.general.copy(app.url.path) },
+                onCopyPath: { NSPasteboard.general.copyText(app.url.path) },
                 onTrash: onTrash
             )
         }
+        .simultaneousGesture(
+            DragGesture(minimumDistance: 10, coordinateSpace: .named(Self.gridSpace))
+                .onChanged { value in
+                    onDragChanged(value.location)
+                }
+                .onEnded { value in
+                    onDragEnded(value.location)
+                }
+        )
+        .offset(dragOffset)
+        .zIndex(isDragged ? 10 : 0)
+        .scaleEffect(isDragged ? 1.06 : 1)
+        .shadow(color: .black.opacity(isDragged ? 0.35 : 0), radius: isDragged ? 14 : 0, y: isDragged ? 6 : 0)
         .onHover { hovered = $0 }
         .animation(reduceMotion ? nil : .easeInOut(duration: 0.15), value: hovered)
+        .animation(reduceMotion ? nil : .spring(response: 0.3, dampingFraction: 0.8), value: isDragged)
         .help(app.url.path)
-        .accessibilityHint("点按打开应用，右上角星标可收藏")
+        .accessibilityHint("点按打开应用，长按拖动可排序")
         .accessibilityIdentifier("apps.card.\(app.id)")
     }
 
@@ -359,19 +464,25 @@ private struct AppCard: View {
     }
 
     private var backgroundColor: Color {
-        if isDragged { return .clear }
+        if isDragged { return Color.cc.muted.opacity(0.4) }
         return hovered ? Color.cc.muted.opacity(0.55) : .clear
     }
 }
 
 // MARK: - List row
 
+/// 独立视图：悬停状态本地化，滚动/悬停只重渲染当前行，不牵动整页。
 private struct AppRow: View {
+    static let listSpace = "appsListSpace"
+
     let app: AppEntry
     let isDragged: Bool
+    let dragOffset: CGSize
     let isFavorite: Bool
     let onOpen: () -> Void
     let onToggleFavorite: () -> Void
+    let onDragChanged: (CGPoint) -> Void
+    let onDragEnded: (CGPoint) -> Void
     let onTrash: () -> Void
     @State private var hovered = false
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
@@ -416,12 +527,15 @@ private struct AppRow: View {
             .frame(maxWidth: .infinity, alignment: .leading)
             .background {
                 RoundedRectangle(cornerRadius: 10, style: .continuous)
-                    .fill(hovered ? Color.cc.muted.opacity(0.55) : .clear)
+                    .fill(backgroundColor)
                     .padding(.horizontal, 4)
             }
             .contentShape(Rectangle())
         }
         .buttonStyle(AppPressButtonStyle())
+        .overlay(alignment: .topTrailing) {
+            favoriteButton.padding(8)
+        }
         .contextMenu {
             AppContextActions(
                 title: app.displayName,
@@ -429,16 +543,54 @@ private struct AppRow: View {
                 onOpen: onOpen,
                 onToggleFavorite: onToggleFavorite,
                 onReveal: { NSWorkspace.shared.activateFileViewerSelecting([app.url]) },
-                onCopyPath: { NSPasteboard.general.copy(app.url.path) },
+                onCopyPath: { NSPasteboard.general.copyText(app.url.path) },
                 onTrash: onTrash
             )
         }
+        .simultaneousGesture(
+            DragGesture(minimumDistance: 10, coordinateSpace: .named(Self.listSpace))
+                .onChanged { value in
+                    onDragChanged(value.location)
+                }
+                .onEnded { value in
+                    onDragEnded(value.location)
+                }
+        )
+        .offset(dragOffset)
+        .zIndex(isDragged ? 10 : 0)
+        .shadow(color: .black.opacity(isDragged ? 0.3 : 0), radius: isDragged ? 10 : 0, y: isDragged ? 4 : 0)
         .onHover { hovered = $0 }
         .animation(reduceMotion ? nil : .easeInOut(duration: 0.15), value: hovered)
+        .animation(reduceMotion ? nil : .spring(response: 0.3, dampingFraction: 0.8), value: isDragged)
         .help(app.url.path)
         .accessibilityLabel("\(app.displayName)，\(app.displaySize)")
         .accessibilityHint("点按打开应用，长按拖动可排序")
         .accessibilityIdentifier("apps.row.\(app.id)")
+    }
+
+    private var favoriteButton: some View {
+        Button {
+            onToggleFavorite()
+        } label: {
+            PikaIcon(isFavorite ? AppIconName.favoriteFilled : AppIconName.favorite,
+                     size: 12,
+                     color: isFavorite ? .cc.primary : .cc.mutedForeground)
+                .frame(width: 20, height: 20)
+                .background {
+                    Circle().fill(Color.cc.muted.opacity(0.9))
+                }
+                .contentShape(Circle())
+        }
+        .buttonStyle(.plain)
+        .opacity(isFavorite || hovered ? 1 : 0)
+        .allowsHitTesting(isFavorite || hovered)
+        .help(isFavorite ? "从收藏中移除" : "添加到收藏")
+        .accessibilityLabel(isFavorite ? "从收藏中移除" : "添加到收藏")
+    }
+
+    private var backgroundColor: Color {
+        if isDragged { return Color.cc.muted.opacity(0.4) }
+        return hovered ? Color.cc.muted.opacity(0.55) : .clear
     }
 }
 
@@ -463,6 +615,15 @@ private struct AppContextActions: View {
     }
 }
 
+// MARK: - Card frames preference
+
+private struct CardFramesKey: SwiftUI.PreferenceKey {
+    static var defaultValue: [String: CGRect] { [:] }
+    static func reduce(value: inout [String: CGRect], nextValue: () -> [String: CGRect]) {
+        value.merge(nextValue()) { _, new in new }
+    }
+}
+
 // MARK: - Press feedback style
 
 /// 按压时轻微缩小并降低不透明度，给卡片和行一致的按压反馈。
@@ -476,7 +637,7 @@ struct AppPressButtonStyle: ButtonStyle {
 }
 
 extension NSPasteboard {
-    func copy(_ string: String) {
+    func copyText(_ string: String) {
         clearContents()
         writeObjects([string as NSString])
     }

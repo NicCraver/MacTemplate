@@ -7,9 +7,6 @@ options:
 packages:
   ChunUI:
     path: Packages/ChunUI
-  ReorderableForEach:
-    url: https://github.com/globulus/swiftui-reorderable-foreach
-    from: 1.0.0
 settings:
   base:
     SWIFT_VERSION: "6.0"
@@ -38,8 +35,6 @@ targets:
     dependencies:
       - package: ChunUI
         product: ChunUI
-      - package: ReorderableForEach
-        product: SwiftUIReorderableForEach
     settings:
       base:
         GENERATE_INFOPLIST_FILE: YES
