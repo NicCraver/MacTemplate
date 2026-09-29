@@ -190,23 +190,17 @@ final class AppLibrary {
         recomputeVisible()
     }
 
-    /// 拖拽重排：把被拖应用移动到插入位置（其余应用让位后的空槽）。
+    /// 把排序菜单拖拽/重排后的可见顺序持久化：
     /// - 收藏分类：写回收藏顺序
     /// - 其他分类：写入手动排序，并自动把排序方式切到「手动」（否则重排会被覆盖、看起来无效）
-    @discardableResult
-    func reorder(draggedID: String, insertionIndex: Int) -> Bool {
-        var ids = visibleApps.filter { $0.id != draggedID }.map(\.identityKey)
-        guard !ids.isEmpty else { return false }
-        let index = min(max(insertionIndex, 0), ids.count)
-        ids.insert(draggedID, at: index)
+    func applyVisibleOrder(_ ordered: [AppEntry]) {
+        let ids = ordered.map(\.identityKey)
 
         if category == .favorites {
-            var merged = ids
-            merged += favoriteOrder.filter { !ids.contains($0) }
-            favoriteOrder = merged
+            favoriteOrder = ids + favoriteOrder.filter { !ids.contains($0) }
             persistFavorites()
             recomputeVisible()
-            return true
+            return
         }
 
         var merged = ids
@@ -216,10 +210,9 @@ final class AppLibrary {
         defaults.set(customOrder, forKey: PreferenceKey.appsCustomOrder)
         if sortKey != .manual {
             sortKey = .manual   // didSet 会重算可见列表
-            return true
+            return
         }
         recomputeVisible()
-        return true
     }
 
     private func persistFavorites() {

@@ -17,6 +17,7 @@
 		2870994EFA77DEE95CCEFADA /* PreferenceKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D9789653B191A3006A08AED /* PreferenceKey.swift */; };
 		29A4E768C5947EDF3648A74C /* WindowChrome.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8FC2A1512E3E4864294497F /* WindowChrome.swift */; };
 		2A65021ED0E9305628EEE1B9 /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC39A0A793104826EB72ACDD /* AboutView.swift */; };
+		331E21D9EE58C1ED1A9A6AB8 /* SwiftUIReorderableForEach in Frameworks */ = {isa = PBXBuildFile; productRef = F3D3132A0D2C7AEDAC44B57E /* SwiftUIReorderableForEach */; };
 		4398706F3D9D50E9D1A08BF7 /* GeneralSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 816996C0CE0BFA96C65082E6 /* GeneralSettingsView.swift */; };
 		4A171F6C94FBF694EBD18DEC /* RootSplitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F511AFBD94AF9DC787C6AF2 /* RootSplitView.swift */; };
 		4A28576381223D554DC05353 /* SidebarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84F035E3389ACBBB83E87BD5 /* SidebarView.swift */; };
@@ -134,6 +135,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				76D5D60011E3876383149194 /* ChunUI in Frameworks */,
+				331E21D9EE58C1ED1A9A6AB8 /* SwiftUIReorderableForEach in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -367,6 +369,7 @@
 			name = AppList;
 			packageProductDependencies = (
 				25C37C41BB5144172E1FE426 /* ChunUI */,
+				F3D3132A0D2C7AEDAC44B57E /* SwiftUIReorderableForEach */,
 			);
 			productName = AppList;
 			productReference = BB50E90CF2B9A7F43B603B9D /* AppList.app */;
@@ -443,6 +446,7 @@
 			mainGroup = F6D72647F8C8672D8CC24D45;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
+				9769A3A95BBAB707597289E9 /* XCRemoteSwiftPackageReference "swiftui-reorderable-foreach" */,
 				B7F8826DA8ECFE8EC839874B /* XCLocalSwiftPackageReference "Packages/ChunUI" */,
 			);
 			preferredProjectObjectVersion = 77;
@@ -842,10 +846,26 @@
 		};
 /* End XCLocalSwiftPackageReference section */
 
+/* Begin XCRemoteSwiftPackageReference section */
+		9769A3A95BBAB707597289E9 /* XCRemoteSwiftPackageReference "swiftui-reorderable-foreach" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/globulus/swiftui-reorderable-foreach";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
 /* Begin XCSwiftPackageProductDependency section */
 		25C37C41BB5144172E1FE426 /* ChunUI */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = ChunUI;
+		};
+		F3D3132A0D2C7AEDAC44B57E /* SwiftUIReorderableForEach */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9769A3A95BBAB707597289E9 /* XCRemoteSwiftPackageReference "swiftui-reorderable-foreach" */;
+			productName = SwiftUIReorderableForEach;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
