@@ -8,7 +8,7 @@ struct AppsPage: View {
     @State private var pendingTrash: AppEntry?
     @FocusState private var searchFocused: Bool
 
-    // 拖拽排序状态（网格 appsGridSpace / 列表 appsListSpace 两个命名空间通用）
+    // 拖拽排序状态
     @State private var draggingID: String?
     @State private var dragStartPoint: CGPoint = .zero
     @State private var dragStartCenter: CGPoint?
@@ -188,6 +188,47 @@ struct AppsPage: View {
         .accessibilityLabel("分类筛选")
     }
 
+    // MARK: - Content
+
+    @ViewBuilder
+    private var content: some View {
+        if library.isScanning && library.apps.isEmpty {
+            HStack {
+                Spacer()
+                ProgressView()
+                    .controlSize(.large)
+                Spacer()
+            }
+            .padding(.top, 80)
+        } else if library.visibleApps.isEmpty {
+            CCEmptyState(
+                kind: .knowledge,
+                message: emptyTitle,
+                detail: emptyDetail,
+                compact: true
+            )
+            .frame(maxWidth: .infinity, minHeight: 220)
+        } else {
+            switch library.viewMode {
+            case .grid:
+                gridView
+            case .list:
+                listView
+            }
+        }
+    }
+
+    private var emptyTitle: String {
+        if !query.trimmingCharacters(in: .whitespaces).isEmpty { return "没有匹配的应用" }
+        if library.category == .mostUsed { return "还没有常用应用" }
+        return "这里还没有应用"
+    }
+
+    private var emptyDetail: String {
+        if !query.trimmingCharacters(in: .whitespaces).isEmpty { return "换个关键词，或清空搜索" }
+        return "换个分类看看，或在「分类」菜单里开启「显示系统应用」"
+    }
+
     // MARK: - Drag reorder
 
     /// 拖拽期间的计算布局：被拖卡片移到插入点，其余卡片让位（带弹簧动画）。
@@ -258,46 +299,7 @@ struct AppsPage: View {
         }
     }
 
-    // MARK: - Content
-
-    @ViewBuilder
-    private var content: some View {
-        if library.isScanning && library.apps.isEmpty {
-            HStack {
-                Spacer()
-                ProgressView()
-                    .controlSize(.large)
-                Spacer()
-            }
-            .padding(.top, 80)
-        } else if library.visibleApps.isEmpty {
-            CCEmptyState(
-                kind: .knowledge,
-                message: emptyTitle,
-                detail: emptyDetail,
-                compact: true
-            )
-            .frame(maxWidth: .infinity, minHeight: 220)
-        } else {
-            switch library.viewMode {
-            case .grid:
-                gridView
-            case .list:
-                listView
-            }
-        }
-    }
-
-    private var emptyTitle: String {
-        if !query.trimmingCharacters(in: .whitespaces).isEmpty { return "没有匹配的应用" }
-        if library.category == .mostUsed { return "还没有常用应用" }
-        return "这里还没有应用"
-    }
-
-    private var emptyDetail: String {
-        if !query.trimmingCharacters(in: .whitespaces).isEmpty { return "换个关键词，或清空搜索" }
-        return "换个分类看看，或在「分类」菜单里开启「显示系统应用」"
-    }
+    // MARK: - Content views
 
     private var gridView: some View {
         LazyVGrid(
@@ -316,10 +318,10 @@ struct AppsPage: View {
                     onDragEnded: { dragEnded(at: $0) },
                     onTrash: { pendingTrash = app }
                 )
-                .background(cardFrameReader(id: app.id, space: Self.gridSpace))
+                .background(cardFrameReader(id: app.id, space: AppCard.gridSpace))
             }
         }
-        .coordinateSpace(name: Self.gridSpace)
+        .coordinateSpace(name: AppCard.gridSpace)
         .accessibilityIdentifier("apps.grid")
     }
 
@@ -338,11 +340,11 @@ struct AppsPage: View {
                         onDragEnded: { dragEnded(at: $0) },
                         onTrash: { pendingTrash = app }
                     )
-                    .background(cardFrameReader(id: app.id, space: Self.listSpace))
+                    .background(cardFrameReader(id: app.id, space: AppRow.listSpace))
                 }
             }
         }
-        .coordinateSpace(name: Self.listSpace)
+        .coordinateSpace(name: AppRow.listSpace)
         .accessibilityIdentifier("apps.list")
     }
 
@@ -374,75 +376,6 @@ private struct AppCard: View {
     @State private var hovered = false
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
-    var body: some View {
-        Button {
-            onOpen()
-        } label: {
-            VStack(spacing: 8) {
-                ZStack(alignment: .topTrailing) {
-                    Image(nsImage: app.icon)
-                        .resizable()
-                        .frame(width: 64, height: 64)
-                    if isFavorite {
-                        PikaIcon(AppIconName.favoriteFilled, size: 14, color: .cc.primary)
-                            .offset(x: 5, y: -3)
-                    }
-                }
-                Text(app.displayName)
-                    .ccText(font: .cc.sm, color: .cc.foreground)
-                    .lineLimit(2)
-                    .multilineTextAlignment(.center)
-                if let version = app.version {
-                    Text("v\(version)")
-                        .ccText(font: .cc.sm, color: .cc.mutedForeground)
-                }
-            }
-            .padding(.vertical, 16)
-            .padding(.horizontal, 8)
-            .frame(maxWidth: .infinity)
-            .background {
-                RoundedRectangle(cornerRadius: 12, style: .continuous)
-                    .fill(backgroundColor)
-            }
-            .contentShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
-        }
-        .buttonStyle(AppPressButtonStyle())
-        .overlay(alignment: .topTrailing) {
-            favoriteButton.padding(6)
-        }
-        .contextMenu {
-            AppContextActions(
-                title: app.displayName,
-                isFavorite: isFavorite,
-                onOpen: onOpen,
-                onToggleFavorite: onToggleFavorite,
-                onReveal: { NSWorkspace.shared.activateFileViewerSelecting([app.url]) },
-                onCopyPath: { NSPasteboard.general.copyText(app.url.path) },
-                onTrash: onTrash
-            )
-        }
-        .simultaneousGesture(
-            DragGesture(minimumDistance: 10, coordinateSpace: .named(Self.gridSpace))
-                .onChanged { value in
-                    onDragChanged(value.location)
-                }
-                .onEnded { value in
-                    onDragEnded(value.location)
-                }
-        )
-        .offset(dragOffset)
-        .zIndex(isDragged ? 10 : 0)
-        .scaleEffect(isDragged ? 1.06 : 1)
-        .shadow(color: .black.opacity(isDragged ? 0.35 : 0), radius: isDragged ? 14 : 0, y: isDragged ? 6 : 0)
-        .onHover { hovered = $0 }
-        .animation(reduceMotion ? nil : .easeInOut(duration: 0.15), value: hovered)
-        .animation(reduceMotion ? nil : .spring(response: 0.3, dampingFraction: 0.8), value: isDragged)
-        .help(app.url.path)
-        .accessibilityHint("点按打开应用，长按拖动可排序")
-        .accessibilityIdentifier("apps.card.\(app.id)")
-    }
-
-    /// 右上角收藏星标：已收藏时常显品牌色实心星；未收藏时悬停才出现描边星。
     private var favoriteButton: some View {
         Button {
             onToggleFavorite()
@@ -467,6 +400,86 @@ private struct AppCard: View {
         if isDragged { return Color.cc.muted.opacity(0.4) }
         return hovered ? Color.cc.muted.opacity(0.55) : .clear
     }
+
+    private var iconBadge: some View {
+        ZStack(alignment: .topTrailing) {
+            Image(nsImage: app.icon)
+                .resizable()
+                .frame(width: 64, height: 64)
+            if isFavorite {
+                PikaIcon(AppIconName.favoriteFilled, size: 14, color: .cc.primary)
+                    .offset(x: 5, y: -3)
+            }
+        }
+    }
+
+    private var nameLabel: some View {
+        Text(app.displayName)
+            .ccText(font: .cc.sm, color: .cc.foreground)
+            .lineLimit(2)
+            .multilineTextAlignment(.center)
+    }
+
+    @ViewBuilder
+    private var versionLabel: some View {
+        if let version = app.version, !version.isEmpty {
+            Text("v\(version)")
+                .ccText(font: .cc.sm, color: .cc.mutedForeground)
+        }
+    }
+
+    private var dragGesture: some Gesture {
+        DragGesture(minimumDistance: 10, coordinateSpace: .named(Self.gridSpace))
+            .onChanged { value in
+                onDragChanged(value.location)
+            }
+            .onEnded { value in
+                onDragEnded(value.location)
+            }
+    }
+
+    private var menuContent: some View {
+        AppContextActions(
+            title: app.displayName,
+            isFavorite: isFavorite,
+            onOpen: onOpen,
+            onToggleFavorite: onToggleFavorite,
+            onReveal: { NSWorkspace.shared.activateFileViewerSelecting([app.url]) },
+            onCopyPath: { NSPasteboard.general.copyText(app.url.path) },
+            onTrash: onTrash
+        )
+    }
+
+    var body: some View {
+        VStack(spacing: 8) {
+            iconBadge
+            nameLabel
+            versionLabel
+        }
+        .padding(.vertical, 16)
+        .padding(.horizontal, 8)
+        .frame(maxWidth: .infinity)
+        .background {
+            RoundedRectangle(cornerRadius: 12, style: .continuous)
+                .fill(backgroundColor)
+        }
+        .overlay(alignment: .topTrailing) {
+            favoriteButton.padding(6)
+        }
+        .contentShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+        .onTapGesture { onOpen() }
+        .gesture(dragGesture)
+        .contextMenu { menuContent }
+        .onHover { hovered = $0 }
+        .animation(reduceMotion ? nil : .easeInOut(duration: 0.15), value: hovered)
+        .animation(reduceMotion ? nil : .spring(response: 0.3, dampingFraction: 0.8), value: isDragged)
+        .help(app.url.path)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(app.displayName)
+        .accessibilityHint("点按打开应用，拖动可排序，右上角星标可收藏")
+        .accessibilityAddTraits(.isButton)
+        .accessibilityIdentifier("apps.card.\(app.id)")
+    }
 }
 
 // MARK: - List row
@@ -486,87 +499,6 @@ private struct AppRow: View {
     let onTrash: () -> Void
     @State private var hovered = false
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
-
-    var body: some View {
-        Button {
-            onOpen()
-        } label: {
-            HStack(spacing: 14) {
-                Image(nsImage: app.icon)
-                    .resizable()
-                    .frame(width: 32, height: 32)
-                    .overlay(alignment: .topTrailing) {
-                        if isFavorite {
-                            PikaIcon(AppIconName.favoriteFilled, size: 10, color: .cc.primary)
-                                .offset(x: 4, y: -2)
-                        }
-                    }
-
-                VStack(alignment: .leading, spacing: 3) {
-                    Text(app.displayName)
-                        .ccText(font: .cc.base, color: .cc.foreground)
-                        .lineLimit(1)
-                    Text(app.bundleID ?? app.url.path)
-                        .ccText(font: .cc.sm, color: .cc.mutedForeground)
-                        .lineLimit(1)
-                }
-
-                Spacer(minLength: 8)
-
-                Text(app.displaySize)
-                    .ccText(font: .cc.sm, color: .cc.mutedForeground)
-                    .monospacedDigit()
-                    .frame(width: 72, alignment: .trailing)
-                Text(app.displayDate)
-                    .ccText(font: .cc.sm, color: .cc.mutedForeground)
-                    .monospacedDigit()
-                    .frame(width: 120, alignment: .trailing)
-            }
-            .padding(.horizontal, 16)
-            .padding(.vertical, 12)
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .background {
-                RoundedRectangle(cornerRadius: 10, style: .continuous)
-                    .fill(backgroundColor)
-                    .padding(.horizontal, 4)
-            }
-            .contentShape(Rectangle())
-        }
-        .buttonStyle(AppPressButtonStyle())
-        .overlay(alignment: .topTrailing) {
-            favoriteButton.padding(8)
-        }
-        .contextMenu {
-            AppContextActions(
-                title: app.displayName,
-                isFavorite: isFavorite,
-                onOpen: onOpen,
-                onToggleFavorite: onToggleFavorite,
-                onReveal: { NSWorkspace.shared.activateFileViewerSelecting([app.url]) },
-                onCopyPath: { NSPasteboard.general.copyText(app.url.path) },
-                onTrash: onTrash
-            )
-        }
-        .simultaneousGesture(
-            DragGesture(minimumDistance: 10, coordinateSpace: .named(Self.listSpace))
-                .onChanged { value in
-                    onDragChanged(value.location)
-                }
-                .onEnded { value in
-                    onDragEnded(value.location)
-                }
-        )
-        .offset(dragOffset)
-        .zIndex(isDragged ? 10 : 0)
-        .shadow(color: .black.opacity(isDragged ? 0.3 : 0), radius: isDragged ? 10 : 0, y: isDragged ? 4 : 0)
-        .onHover { hovered = $0 }
-        .animation(reduceMotion ? nil : .easeInOut(duration: 0.15), value: hovered)
-        .animation(reduceMotion ? nil : .spring(response: 0.3, dampingFraction: 0.8), value: isDragged)
-        .help(app.url.path)
-        .accessibilityLabel("\(app.displayName)，\(app.displaySize)")
-        .accessibilityHint("点按打开应用，长按拖动可排序")
-        .accessibilityIdentifier("apps.row.\(app.id)")
-    }
 
     private var favoriteButton: some View {
         Button {
@@ -591,6 +523,101 @@ private struct AppRow: View {
     private var backgroundColor: Color {
         if isDragged { return Color.cc.muted.opacity(0.4) }
         return hovered ? Color.cc.muted.opacity(0.55) : .clear
+    }
+
+    private var iconBadge: some View {
+        ZStack(alignment: .topTrailing) {
+            Image(nsImage: app.icon)
+                .resizable()
+                .frame(width: 32, height: 32)
+            if isFavorite {
+                PikaIcon(AppIconName.favoriteFilled, size: 10, color: .cc.primary)
+                    .offset(x: 4, y: -2)
+            }
+        }
+    }
+
+    private var titleStack: some View {
+        VStack(alignment: .leading, spacing: 3) {
+            Text(app.displayName)
+                .ccText(font: .cc.base, color: .cc.foreground)
+                .lineLimit(1)
+            Text(app.bundleID ?? app.url.path)
+                .ccText(font: .cc.sm, color: .cc.mutedForeground)
+                .lineLimit(1)
+        }
+    }
+
+    private var sizeLabel: some View {
+        Text(app.displaySize)
+            .ccText(font: .cc.sm, color: .cc.mutedForeground)
+            .monospacedDigit()
+            .frame(width: 72, alignment: .trailing)
+    }
+
+    private var dateLabel: some View {
+        Text(app.displayDate)
+            .ccText(font: .cc.sm, color: .cc.mutedForeground)
+            .frame(width: 110, alignment: .trailing)
+    }
+
+    private var dragGesture: some Gesture {
+        DragGesture(minimumDistance: 10, coordinateSpace: .named(Self.listSpace))
+            .onChanged { value in
+                onDragChanged(value.location)
+            }
+            .onEnded { value in
+                onDragEnded(value.location)
+            }
+    }
+
+    private var menuContent: some View {
+        AppContextActions(
+            title: app.displayName,
+            isFavorite: isFavorite,
+            onOpen: onOpen,
+            onToggleFavorite: onToggleFavorite,
+            onReveal: { NSWorkspace.shared.activateFileViewerSelecting([app.url]) },
+            onCopyPath: { NSPasteboard.general.copyText(app.url.path) },
+            onTrash: onTrash
+        )
+    }
+
+    var body: some View {
+        HStack(spacing: 14) {
+            iconBadge
+            titleStack
+            Spacer(minLength: 8)
+            sizeLabel
+            dateLabel
+        }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 12)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background {
+            RoundedRectangle(cornerRadius: 10, style: .continuous)
+                .fill(backgroundColor)
+                .padding(.horizontal, 4)
+        }
+        .overlay(alignment: .topTrailing) {
+            favoriteButton.padding(8)
+        }
+        .contentShape(Rectangle())
+        .onTapGesture { onOpen() }
+        .gesture(dragGesture)
+        .contextMenu { menuContent }
+        .onHover { hovered = $0 }
+        .animation(reduceMotion ? nil : .easeInOut(duration: 0.15), value: hovered)
+        .animation(reduceMotion ? nil : .spring(response: 0.3, dampingFraction: 0.8), value: isDragged)
+        .offset(dragOffset)
+        .zIndex(isDragged ? 10 : 0)
+        .shadow(color: .black.opacity(isDragged ? 0.3 : 0), radius: isDragged ? 10 : 0, y: isDragged ? 4 : 0)
+        .help(app.url.path)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel("\(app.displayName)，\(app.displaySize)")
+        .accessibilityHint("点按打开应用，拖动可排序")
+        .accessibilityAddTraits(.isButton)
+        .accessibilityIdentifier("apps.row.\(app.id)")
     }
 }
 
